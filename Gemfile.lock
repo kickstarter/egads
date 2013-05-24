@@ -1,0 +1,35 @@
+PATH
+  remote: .
+  specs:
+    egads (0.0.1)
+      fog
+
+GEM
+  remote: https://rubygems.org/
+  specs:
+    builder (3.2.0)
+    excon (0.22.1)
+    fog (1.11.1)
+      builder
+      excon (~> 0.20)
+      formatador (~> 0.2.0)
+      json (~> 1.7)
+      mime-types
+      net-scp (~> 1.1)
+      net-ssh (>= 2.1.3)
+      nokogiri (~> 1.5.0)
+      ruby-hmac
+    formatador (0.2.4)
+    json (1.8.0)
+    mime-types (1.23)
+    net-scp (1.1.1)
+      net-ssh (>= 2.6.5)
+    net-ssh (2.6.7)
+    nokogiri (1.5.9)
+    ruby-hmac (0.4.0)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  egads!
