@@ -1,0 +1,33 @@
+# Overrides?
+s3:
+  bucket: my-bucket
+  access_key: mykey
+  secret_key: mysecret
+
+build:
+  # Additional paths to include in the built tarball
+  extra_paths:
+    - REVISION
+    - public/assets
+    - public/stylesheets
+
+  before:
+    - script/egads/before-build
+  after:
+    - script/egads/after-build
+
+upload:
+  before:
+    - script/egads/before-upload
+  after:
+    - script/egads/after-upload
+
+stage:
+  # No before-stage hook
+  after:
+    - script/egads/after-stage
+release:
+  before:
+    - script/egads/before-release
+  after:
+    - script/egads/after-release

@@ -18,6 +18,7 @@ Gem::Specification.new do |s|
   s.rdoc_options      = ["--charset=UTF-8"]
 
   s.add_dependency "fog"
+  s.add_dependency "thor"
 
   s.description = %s{
     A collection of scripts for making a deployable tarball of a git commit,
