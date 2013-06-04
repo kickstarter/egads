@@ -19,6 +19,8 @@ Gem::Specification.new do |s|
 
   s.add_dependency "fog"
   s.add_dependency "thor"
+  s.add_development_dependency "rake"
+  s.add_development_dependency "minitest"
 
   s.description = %s{
     A collection of scripts for making a deployable tarball of a git commit,

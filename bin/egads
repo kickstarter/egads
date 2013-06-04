@@ -2,4 +2,4 @@
 # TODO: remove this
 $: << './lib'
 require 'egads'
-Egads.start
+Egads::CLI.start
