@@ -6,15 +6,23 @@ module Egads
     end
 
     def key
-      [Config.s3_prefix, "#{sha}.#{Config::TARBALL_EXTENSION}"].compact * '/'
+      [Config.s3_prefix, "#{sha}.tar.gz"].compact * '/'
     end
 
     def exists?
       bucket.files.head(key)
     end
 
-    def upload(local_path)
-      File.open(local_path) {|f|
+    def local_tar_path
+      "tmp/#{sha}.tar"
+    end
+
+    def local_gzipped_path
+      "#{local_tar_path}.gz"
+    end
+
+    def upload(path=local_gzipped_path)
+      File.open(path) {|f|
         bucket.files.create(key: key, body: f)
       }
     end

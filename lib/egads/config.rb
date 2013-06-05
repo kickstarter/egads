@@ -1,7 +1,6 @@
 module Egads
   module Config
 
-    TARBALL_EXTENSION = 'tar.gz'
     class << self
       def config_path
         path = ENV['EGADS_CONFIG'] || File.join(ENV['PWD'], 'egads.yml')
@@ -23,6 +22,20 @@ module Egads
 
       def s3_prefix
         config['s3']['prefix']
+      end
+
+      # Returns the hooks in the config for cmd and hook.
+      # E.g. hooks_for(:build, :post)
+      def hooks_for(cmd, hook)
+        if Hash === config[cmd.to_s]
+          Array(config[cmd.to_s][hook.to_s])
+        else
+          []
+        end
+      end
+
+      def build_extra_paths
+        config['build'] && Array(config['build']['extra_paths'])
       end
     end
   end
