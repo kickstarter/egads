@@ -1,8 +1,9 @@
 module Egads
   class S3Tarball
-    attr_reader :sha
-    def initialize(sha)
+    attr_reader :sha, :remote
+    def initialize(sha, remote = false)
       @sha = sha
+      @remote = remote
     end
 
     def key
@@ -27,13 +28,13 @@ module Egads
       }
     end
 
-    # Generate a secure URL, expires in 1 hour by default
-    def url(expires = Time.now + 3600)
-      bucket.files.new(key: key).url(expires)
+    # Load the file contents from S3
+    def contents
+      bucket.files.get(key: key).body
     end
 
     def bucket
-      Config.s3_bucket
+      remote ? RemoteConfig.s3_bucket : Config.s3_bucket
     end
   end
 end

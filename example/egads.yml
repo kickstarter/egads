@@ -1,13 +1,12 @@
-# Overrides?
 s3:
   bucket: my-bucket
   access_key: mykey
   secret_key: mysecret
+  prefix: my_project # Optional prefix for S3 paths
 
 build:
   # Additional paths to include in the built tarball
   extra_paths:
-    - REVISION
     - public/assets
     - public/stylesheets
 

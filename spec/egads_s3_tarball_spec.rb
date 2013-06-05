@@ -2,7 +2,7 @@ require_relative 'spec_helper'
 
 describe Egads::S3Tarball do
 
-  before { ENV['EGADS_CONFIG'] = "spec/egads.yml" }
+  before { ENV['EGADS_CONFIG'] = "example/egads.yml" }
   after { ENV.delete('EGAGS_CONFIG') }
 
   subject { Egads::S3Tarball.new('sha') }

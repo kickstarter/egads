@@ -8,11 +8,11 @@ describe Egads::Config do
   end
 
   describe "with an config file" do
-    before { ENV['EGADS_CONFIG'] = "spec/egads.yml" }
+    before { ENV['EGADS_CONFIG'] = "example/egads.yml" }
     after { ENV.delete('EGAGS_CONFIG') }
 
     it "has an S3 bucket" do
-      subject.s3_bucket.key.must_equal 'egads-bucket'
+      subject.s3_bucket.key.must_equal 'my-bucket'
     end
 
     it "has an S3 prefix" do
