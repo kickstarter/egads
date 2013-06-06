@@ -7,8 +7,8 @@ module Egads
     desc "build", "[local] Compiles a deployable tarball of the current commit and uploads it to S3"
     method_option :force, type: :boolean, aliases: '-f', default: false, banner: "Build and overwrite existing tarball on S3"
     method_option 'no-upload', type: :boolean, default: false, banner: "Don't upload the tarball to S3"
-    def build
-      sha = run_or_die("git rev-parse --verify HEAD", capture: true).strip
+    def build(rev='HEAD')
+      sha = run_or_die("git rev-parse --verify #{rev}", capture: true).strip
       tarball = S3Tarball.new(sha)
       if !options[:force] && tarball.exists?
         say "Tarball for #{sha} already exists. Pass --force to rebuild."
@@ -23,6 +23,8 @@ module Egads
         say "Stash your changes with `git add . && git stash` and try again."
         exit 1
       end
+
+      # Check if we're on sha, if not, ask to check it out
 
       # Make git archive
       FileUtils.mkdir_p(File.dirname(tarball.local_tar_path))
