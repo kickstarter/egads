@@ -23,7 +23,6 @@ describe Egads::S3Tarball do
     end
 
     it('should exist') { subject.exists?.wont_be_nil }
-    it('should have a url') { subject.url.must_be_kind_of String }
   end
 
 
