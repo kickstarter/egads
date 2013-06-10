@@ -170,7 +170,7 @@ module Egads
     # Run command hooks from config file
     # E.g. run_hooks_for(:build, :post)
     def run_hooks_for(cmd, hook)
-      say_status :hooks, "Running #{build} #{hook} hooks"
+      say_status :hooks, "Running #{cmd} #{hook} hooks"
       Config.hooks_for(cmd, hook).each do |command|
         say "Running `#{command}`"
         run_or_die command
