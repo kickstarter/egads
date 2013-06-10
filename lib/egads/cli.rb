@@ -16,6 +16,15 @@ module Egads
       end
 
       say "Building tarball for #{sha}..."
+      # Check if we're on sha, if not, ask to check it out
+      head = run_or_die("git rev-parse --verify HEAD", capture: true).strip
+      unless head == sha
+        say "** Error **"
+        say "Trying to build #{sha[0,7]}, but #{head[0,7]} is checked out."
+        say "Run `git checkout #{head[0,7]}` and try again."
+        exit 1
+      end
+
       # Ensure clean working directory
       unless run("git status -s", capture: true).empty?
         say "** Error **"
@@ -23,8 +32,6 @@ module Egads
         say "Stash your changes with `git add . && git stash` and try again."
         exit 1
       end
-
-      # Check if we're on sha, if not, ask to check it out
 
       # Make git archive
       FileUtils.mkdir_p(File.dirname(tarball.local_tar_path))
