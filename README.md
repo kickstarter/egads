@@ -36,8 +36,8 @@ Commands are either *porcelain* commands that you should call directly as part o
 
 There are two config files:
 
-* `egads.yml` ([example](examples/egads.yml)) is in your git repo and tarballs. It has instructions for building, staging, and releasing tarballs.
-* `/etc/egads.yml` ([example](examples/egads_remote.yml)) on remote servers has some configuration for downloading and extracting tarballs from S3; and some environment variables that could vary across environments. This file is presumably provisioned by a tool like Chef or Puppet.
+* `egads.yml` ([example](example/egads.yml)) is in your git repo and tarballs. It has instructions for building, staging, and releasing tarballs.
+* `/etc/egads.yml` ([example](example/egads_remote.yml)) on remote servers has some configuration for downloading and extracting tarballs from S3; and some environment variables that could vary across environments. This file is presumably provisioned by a tool like Chef or Puppet.
 
 ## Deploy process
 
