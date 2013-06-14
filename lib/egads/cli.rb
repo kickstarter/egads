@@ -80,7 +80,7 @@ module Egads
     desc "extract SHA", "[remote, plumbing] Downloads tarball for SHA from S3 and extracts it to the filesystem"
     method_option :force, type: :boolean, default: false, banner: "Overwrite existing files"
     def extract(sha)
-      dir = RemoteConfig.release_dir
+      dir = RemoteConfig.release_dir(sha)
       path = File.join(dir, "#{sha}.tar.gz")
       tarball = S3Tarball.new(sha, true)
 
@@ -112,7 +112,7 @@ module Egads
     method_option :force, type: :boolean, default: false, banner: "Overwrite existing files"
     def stage(sha)
       invoke(:extract, [sha], options)
-      dir = RemoteConfig.release_dir
+      dir = RemoteConfig.release_dir(sha)
       stage_flag_path = File.join(dir, '.egads-stage-success')
       if options[:force] || !File.exists?(stage_flag_path)
         inside dir do
@@ -140,7 +140,7 @@ module Egads
     method_option :force, type: :boolean, default: false, banner: "Overwrite existing files while staging"
     def release(sha)
       invoke(:stage, [sha], options)
-      dir = RemoteConfig.release_dir
+      dir = RemoteConfig.release_dir(sha)
       inside dir do
         run_hooks_for(:release, :before)
       end
