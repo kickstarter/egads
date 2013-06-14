@@ -59,6 +59,7 @@ module Egads
       tarball = S3Tarball.new(sha)
       if !options[:force] && tarball.exists?
         say "Tarball for #{sha} already exists. Pass --force to upload again."
+        return
       end
 
       path = tarball.local_gzipped_path
