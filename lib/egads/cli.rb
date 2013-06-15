@@ -85,7 +85,7 @@ module Egads
       tarball = S3Tarball.new(sha, true)
 
       inside dir do
-        if options[:force] || !File.exists?(path)
+        if options[:force] || File.zero?(path) || !File.exists?(path)
           say "Downloading tarball"
           duration = Benchmark.realtime do
             File.open(path, 'w') {|f| f << tarball.contents }
@@ -93,7 +93,7 @@ module Egads
           size = File.size(path)
           say "Downloaded in %.1f seconds (%.1f KB/s)" % [duration, (size.to_f / 2**10) / duration]
         else
-          say "Tarball already downloads. Use --force to overwrite"
+          say "Tarball already downloaded. Use --force to overwrite"
         end
 
         # Check revision file to see if tarball is already extracted
@@ -118,7 +118,7 @@ module Egads
         inside dir do
           run_hooks_for(:stage, :before)
 
-          run_or_die("bundle install --deployment --quiet") if File.readable?("GEMFILE")
+          run_or_die("bundle install --deployment --quiet") if File.readable?("Gemfile")
           if ENV['SHARED_PATH']
             symlinked_dirs = %w(public/system tmp/pids log)
             symlinked_dirs.each do |d|

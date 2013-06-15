@@ -34,7 +34,7 @@ module Egads
 
     # Load the file contents from S3
     def contents
-      bucket.files.get(key: key).body
+      bucket.files.get(key).body
     end
 
     def bucket

@@ -22,7 +22,7 @@ module Egads
     extend CommonConfig
 
     def self.config_path
-      path = ENV['EGADS_CONFIG'] || File.join(ENV['PWD'], 'egads.yml')
+      path = ENV['EGADS_CONFIG'] || File.join(Dir.pwd, 'egads.yml')
       unless path && File.readable?(path)
         raise ArgumentError.new("Could not read config file. Set either EGADS_CONFIG, or create egads.yml in the current directory")
       end
