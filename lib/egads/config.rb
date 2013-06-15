@@ -53,6 +53,7 @@ module Egads
       unless path && File.readable?(path)
         raise ArgumentError.new("Could not read remote config file. Set either EGADS_REMOTE_CONFIG, or create /etc/egads.yml")
       end
+      path
     end
 
     def self.release_dir(sha)
