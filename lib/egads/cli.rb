@@ -41,7 +41,7 @@ module Egads
       File.open('REVISION', 'w') {|f| f << sha + "\n" }
       run_or_die "tar -uf #{tarball.local_tar_path} REVISION"
 
-      run_hooks_for(:build, :post)
+      run_hooks_for(:build, :after)
 
       extra_paths = Config.build_extra_paths
       if extra_paths.any?
@@ -169,7 +169,7 @@ module Egads
 
     private
     # Run command hooks from config file
-    # E.g. run_hooks_for(:build, :post)
+    # E.g. run_hooks_for(:build, :after)
     def run_hooks_for(cmd, hook)
       say_status :hooks, "Running #{cmd} #{hook} hooks"
       Config.hooks_for(cmd, hook).each do |command|
