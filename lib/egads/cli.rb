@@ -88,7 +88,7 @@ module Egads
         if options[:force] || !File.exists?(path)
           say "Downloading tarball"
           duration = Benchmark.realtime do
-            File.open(path, 'w') {|f| f << tarball.body }
+            File.open(path, 'w') {|f| f << tarball.contents }
           end
           size = File.size(path)
           say "Downloaded in %.1f seconds (%.1f KB/s)" % [duration, (size.to_f / 2**10) / duration]
@@ -97,7 +97,7 @@ module Egads
         end
 
         # Check revision file to see if tarball is already extracted
-        extract_flag_path File.join(dir, '.egads-extract-success')
+        extract_flag_path = File.join(dir, '.egads-extract-success')
         if options[:force] || !File.exists?(extract_flag_path)
           say "Extracting tarball"
           run_or_die "tar -zxf #{path}"
