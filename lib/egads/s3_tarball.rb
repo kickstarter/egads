@@ -6,8 +6,12 @@ module Egads
       @remote = remote
     end
 
+    def config
+      remote ? RemoteConfig : Config
+    end
+
     def key
-      [Config.s3_prefix, "#{sha}.tar.gz"].compact * '/'
+      [config.s3_prefix, "#{sha}.tar.gz"].compact * '/'
     end
 
     def exists?
@@ -34,7 +38,7 @@ module Egads
     end
 
     def bucket
-      remote ? RemoteConfig.s3_bucket : Config.s3_bucket
+      config.s3_bucket
     end
   end
 end
