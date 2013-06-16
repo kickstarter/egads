@@ -70,7 +70,7 @@ module Egads
 
     # Set environment variables from the config
     def self.setup_environment
-      config['env'].each{|k,v| ENV[k] = v } if config['env']
+      config['env'].each{|k,v| ENV[k] = v.to_s } if config['env']
     end
 
     def self.restart_command

@@ -80,6 +80,7 @@ module Egads
     desc "extract SHA", "[remote, plumbing] Downloads tarball for SHA from S3 and extracts it to the filesystem"
     method_option :force, type: :boolean, default: false, banner: "Overwrite existing files"
     def extract(sha)
+      RemoteConfig.setup_environment
       dir = RemoteConfig.release_dir(sha)
       path = File.join(dir, "#{sha}.tar.gz")
       tarball = S3Tarball.new(sha, true)
@@ -111,6 +112,7 @@ module Egads
     desc "stage SHA", "[remote] Readies SHA for release. If needed, generates URL for SHA and extracts"
     method_option :force, type: :boolean, default: false, banner: "Overwrite existing files"
     def stage(sha)
+      RemoteConfig.setup_environment
       invoke(:extract, [sha], options)
       dir = RemoteConfig.release_dir(sha)
       stage_flag_path = File.join(dir, '.egads-stage-success')
@@ -139,6 +141,7 @@ module Egads
     desc "release SHA", "[remote] Symlinks SHA to current and restarts services. If needed, stages SHA"
     method_option :force, type: :boolean, default: false, banner: "Overwrite existing files while staging"
     def release(sha)
+      RemoteConfig.setup_environment
       invoke(:stage, [sha], options)
       dir = RemoteConfig.release_dir(sha)
       inside dir do
