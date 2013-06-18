@@ -124,6 +124,16 @@ module Egads
           if shared_path = ENV['SHARED_PATH']
             symlink_directory File.join(shared_path, 'system'), File.join(dir, 'public', 'system')
             symlink_directory File.join(shared_path, 'log'), File.join(dir, 'log')
+
+            # Symlink config files
+            shared_config = File.join(shared_config, 'config')
+            if File.directory?(shared_config)
+              Dir.glob("#{shared_config}/*").each do |source|
+                basename = File.basename(source)
+                destination = File.join(dir, 'config', basename)
+                symlink(source, destination)
+              end
+            end
           end
 
           run_hooks_for(:stage, :after)
@@ -187,5 +197,12 @@ module Egads
       FileUtils.rm_rf(dest)
       FileUtils.ln_s(src, dest)
     end
+
+    def symlink(src, dest)
+      raise ArgumentError.new("#{src} is not a file") unless File.file?(src)
+      say_status :symlink, "from #{src} to #{dest}"
+      FileUtils.ln_sf(src, dest)
+    end
+
   end
 end
