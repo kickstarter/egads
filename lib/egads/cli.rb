@@ -121,13 +121,9 @@ module Egads
           run_hooks_for(:stage, :before)
 
           run_or_die("bundle install --deployment --quiet") if File.readable?("Gemfile")
-          if ENV['SHARED_PATH']
-            symlinked_dirs = %w(public/system tmp/pids log)
-            symlinked_dirs.each do |d|
-              source = File.join(ENV['SHARED_PATH'], d)
-              destination = File.join(dir, d)
-              symlink_directory(source, destination)
-            end
+          if shared_path = ENV['SHARED_PATH']
+            symlink_directory File.join(shared_path, 'system'), File.join(dir, 'public', 'system')
+            symlink_directory File.join(shared_path, 'log'), File.join(dir, 'log')
           end
 
           run_hooks_for(:stage, :after)
