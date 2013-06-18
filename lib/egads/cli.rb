@@ -120,7 +120,16 @@ module Egads
         inside dir do
           run_hooks_for(:stage, :before)
 
-          run_or_die("bundle install --deployment --quiet") if File.readable?("Gemfile")
+          # Bundler
+          if File.readable?("Gemfile")
+            bundler_args = %w(--deployment --quiet)
+            # Hack to force bundle options overridden by --deployment
+            bundler_args << "--without #{ENV['BUNDLE_WITHOUT']}" if ENV['BUNDLE_WITHOUT']
+            bundler_args << "--path #{ENV['BUNDLE_PATH']}"       if ENV['BUNDLE_PATH']
+
+            run_or_die("bundle install #{bundler_args * ' '}")
+          end
+
           if shared_path = ENV['SHARED_PATH']
             symlink_directory File.join(shared_path, 'system'), File.join(dir, 'public', 'system')
             symlink_directory File.join(shared_path, 'log'), File.join(dir, 'log')
