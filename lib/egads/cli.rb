@@ -154,7 +154,13 @@ module Egads
         run_hooks_for(:release, :before)
       end
 
-      symlink_directory(dir, RemoteConfig.release_to) unless RemoteConfig.release_to == File.readlink(dir)
+      # destination of the current symlink
+      current_release = File.readlink(RemoteConfig.release_to) rescue nil
+      unless dir == current_release
+        # Symlink this release to the release_to
+        symlink_directory(dir, RemoteConfig.release_to) unless dir == current_release
+      end
+
       inside RemoteConfig.release_to do
         # Restart services
         run_or_die(RemoteConfig.restart_command)
