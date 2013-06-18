@@ -150,17 +150,18 @@ module Egads
         run_or_die(RemoteConfig.restart_command)
         run_hooks_for(:release, :after)
       end
-      invoke(:clean)
 
+      FileUtils.touch(dir) # Ensure this release isn't trimmed
+      invoke(:trim, [4])
     end
 
-    desc "clean N", "[remote, plumbing] Deletes old releases, keeping the N most recent (by mtime)"
-    def clean(n=4)
+    desc "trim N", "[remote, plumbing] Deletes old releases, keeping the N most recent (by mtime)"
+    def trim(n=4)
       inside RemoteConfig.extract_to do
         dirs = Dir.glob('*').sort_by{|path| File.mtime(path) }
         dirs.slice!(n..-1)
         dirs.each do |dir|
-          say_status :clean, "Deleting #{dir}"
+          say_status :trim, "Deleting #{dir}"
           FileUtils.rm_rf(dir)
         end
       end
