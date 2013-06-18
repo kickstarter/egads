@@ -126,7 +126,7 @@ module Egads
             symlink_directory File.join(shared_path, 'log'), File.join(dir, 'log')
 
             # Symlink config files
-            shared_config = File.join(shared_config, 'config')
+            shared_config = File.join(shared_path, 'config')
             if File.directory?(shared_config)
               Dir.glob("#{shared_config}/*").each do |source|
                 basename = File.basename(source)
@@ -175,8 +175,7 @@ module Egads
     def trim(n=4)
       inside RemoteConfig.extract_to do
         dirs = Dir.glob('*').sort_by{|path| File.mtime(path) }
-        dirs.slice!(n..-1)
-        dirs.each do |dir|
+        dirs[n..-1].to_a.each do |dir|
           say_status :trim, "Deleting #{dir}"
           FileUtils.rm_rf(dir)
         end
