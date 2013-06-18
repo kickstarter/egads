@@ -172,6 +172,7 @@ module Egads
     end
 
     desc "trim N", "[remote, plumbing] Deletes old releases, keeping the N most recent (by mtime)"
+    method_option :force, type: :boolean, default: false, banner: "No op, compatible with release"
     def trim(n=4)
       dirs = Dir.glob('*').sort_by{|path| File.mtime(path) }.reverse[n..-1].to_a
       dirs.each do |dir|
