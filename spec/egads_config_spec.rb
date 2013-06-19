@@ -48,6 +48,7 @@ describe Egads::RemoteConfig do
     it('#extract_to') { subject.extract_to.must_equal yml['extract_to'] }
     it('#release_dir') { subject.release_dir('abc').must_equal File.join(yml['extract_to'], 'abc') }
     it('#restart_command') { subject.restart_command.must_equal yml['restart_command'] }
+    it('#bundler_options') { subject.bundler_options.must_equal yml['bundler']['options'] }
 
     describe '#setup_environment' do
       before { subject.setup_environment }

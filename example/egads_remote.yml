@@ -1,3 +1,4 @@
+# AWS S3 config for generating signed URL for tarball
 s3:
   bucket: my-bucket
   access_key: mykey
@@ -10,9 +11,11 @@ release_to: /var/apps/my_project/current
 
 restart_command: /etc/init.d/rails_services restart
 
+# Options to pass to bundler
+bundler:
+  options: --deployment --quiet --without development:test --path /var/apps/my_project/shared/bundle
+
 # environment variables to set before executing commands
 env:
   RAILS_ENV: production
   SHARED_PATH: /var/apps/my_project/shared
-  BUNDLE_PATH: /var/apps/my_project/shared/bundle
-  BUNDLE_WITHOUT: development:test

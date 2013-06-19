@@ -76,5 +76,9 @@ module Egads
     def self.restart_command
       config['restart_command']
     end
+
+    def self.bundler_options
+      config['bundler']['options'] if config['bundler']
+    end
   end
 end

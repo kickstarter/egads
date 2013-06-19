@@ -1,6 +1,7 @@
 module Egads
   class CLI < Thor
     include Thor::Actions
+
     ##
     # Local commands
 
@@ -122,12 +123,7 @@ module Egads
 
           # Bundler
           if File.readable?("Gemfile")
-            bundler_args = %w(--deployment --quiet)
-            # Hack to force bundle options overridden by --deployment
-            bundler_args << "--without #{ENV['BUNDLE_WITHOUT']}" if ENV['BUNDLE_WITHOUT']
-            bundler_args << "--path #{ENV['BUNDLE_PATH']}"       if ENV['BUNDLE_PATH']
-
-            run_or_die("bundle install #{bundler_args * ' '}")
+            run_or_die("bundle install #{RemoteConfig.bundler_options}")
           end
 
           if shared_path = ENV['SHARED_PATH']
