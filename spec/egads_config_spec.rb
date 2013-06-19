@@ -8,8 +8,7 @@ describe Egads::Config do
   end
 
   describe "with an config file" do
-    before { ENV['EGADS_CONFIG'] = "example/egads.yml" }
-    after { ENV.delete('EGAGS_CONFIG') }
+    setup_configs!
 
     let(:yml) { YAML.load_file("example/egads.yml") }
 
@@ -38,8 +37,7 @@ describe Egads::RemoteConfig do
   end
 
   describe "with an config file" do
-    before { ENV['EGADS_REMOTE_CONFIG'] = "example/egads_remote.yml" }
-    after { ENV.delete('EGAGS_REMOTE_CONFIG') }
+    setup_configs!
     let(:yml) { YAML.load_file("example/egads_remote.yml") }
 
     describe '#config' do
