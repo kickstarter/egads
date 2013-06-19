@@ -56,16 +56,16 @@ module Egads
       path
     end
 
-    def self.release_dir(sha)
-      File.join(config['extract_to'], sha)
-    end
-
     def self.release_to
       config['release_to']
     end
 
     def self.extract_to
       config['extract_to']
+    end
+
+    def self.release_dir(sha)
+      File.join(config['extract_to'], sha)
     end
 
     # Set environment variables from the config

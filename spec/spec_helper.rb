@@ -13,5 +13,6 @@ rescue LoadError
   puts "Skipping debugger"
 end
 
+# Extensions
 class Minitest::Spec
 end
