@@ -1,7 +1,7 @@
 require 'thor'
 require 'benchmark'
 class Thor
-  class CommandFailedError < Error; end
+  class CommandError < Error; end
 
   module Actions
     # runs command, raises CommandFailedError unless exit status is 0.
@@ -18,6 +18,18 @@ class Thor
 
       say_status :done, "in %.1f seconds" % duration, config.fetch(:verbose, true)
 
+      result
+    end
+
+    def run_with_code(command, config={})
+      result = nil
+      duration = Benchmark.realtime do
+        result = run(command, config.merge(capture: true))
+      end
+
+      if $? != 0
+        raise CommandError.new("`#{command}` failed with exit status #{$?.exitstatus.inspect}")
+      end
       result
     end
 

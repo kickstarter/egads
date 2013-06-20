@@ -3,79 +3,6 @@ module Egads
     include Thor::Actions
 
     ##
-    # Local commands
-
-    desc "build", "[local] Compiles a deployable tarball of the current commit and uploads it to S3"
-    method_option :force, type: :boolean, aliases: '-f', default: false, banner: "Build and overwrite existing tarball on S3"
-    method_option 'no-upload', type: :boolean, default: false, banner: "Don't upload the tarball to S3"
-    def build(rev='HEAD')
-      sha = run_or_die("git rev-parse --verify #{rev}", capture: true).strip
-      tarball = S3Tarball.new(sha)
-      if !options[:force] && tarball.exists?
-        say "Tarball for #{sha} already exists. Pass --force to rebuild."
-        return
-      end
-
-      say "Building tarball for #{sha}..."
-      # Check if we're on sha, if not, ask to check it out
-      head = run_or_die("git rev-parse --verify HEAD", capture: true).strip
-      unless head == sha
-        say "** Error **"
-        say "Trying to build #{sha[0,7]}, but #{head[0,7]} is checked out."
-        say "Run `git checkout #{head[0,7]}` and try again."
-        exit 1
-      end
-
-      # Ensure clean working directory
-      unless run("git status -s", capture: true).empty?
-        say "** Error **"
-        say "Working directory is not clean."
-        say "Stash your changes with `git add . && git stash` and try again."
-        exit 1
-      end
-
-      # Make git archive
-      FileUtils.mkdir_p(File.dirname(tarball.local_tar_path))
-      run_or_die "git archive #{sha} --format=tar > #{tarball.local_tar_path}"
-
-      # Write REVISION and add to tarball
-      File.open('REVISION', 'w') {|f| f << sha + "\n" }
-      run_or_die "tar -uf #{tarball.local_tar_path} REVISION"
-
-      run_hooks_for(:build, :after)
-
-      extra_paths = Config.build_extra_paths
-      if extra_paths.any?
-        run_or_die "tar -uf #{tarball.local_tar_path} #{extra_paths * " "}"
-      end
-
-      run_or_die "gzip -9f #{tarball.local_tar_path}"
-
-      invoke(:upload, [sha], force: options[:force]) unless options['no-upload']
-    end
-
-    method_option :force, type: :boolean, aliases: '-f', default: false, banner: "Overwrite existing tarball on S3"
-    desc "upload SHA", "[local, plumbing] Uploads a tarball for SHA to S3"
-    def upload(sha)
-      tarball = S3Tarball.new(sha)
-      if !options[:force] && tarball.exists?
-        say "Tarball for #{sha} already exists. Pass --force to upload again."
-        return
-      end
-
-      path = tarball.local_gzipped_path
-      size = File.size(path)
-
-      say "Uploading tarball (%.1f MB)" % (size.to_f / 2**20)
-      duration = Benchmark.realtime do
-        tarball.upload(path)
-      end
-      say "Uploaded in %.1f seconds (%.1f KB/s)" % [duration, (size.to_f / 2**10) / duration]
-
-      File.delete(path)
-    end
-
-    ##
     # Remote commands
 
     desc "extract SHA", "[remote, plumbing] Downloads tarball for SHA from S3 and extracts it to the filesystem"
@@ -173,7 +100,7 @@ module Egads
       end
 
       FileUtils.touch(dir) # Ensure this release isn't trimmed
-      invoke(:trim, [4])
+      invoke(:trim, [4], {})
     end
 
     desc "trim N", "[remote, plumbing] Deletes old releases, keeping the N most recent (by mtime)"
@@ -186,7 +113,7 @@ module Egads
       end
     end
 
-    private
+    protected
     # Run command hooks from config file
     # E.g. run_hooks_for(:build, :after)
     def run_hooks_for(cmd, hook)
@@ -213,5 +140,12 @@ module Egads
       FileUtils.ln_sf(src, dest)
     end
 
+    def release_dir
+      RemoteConfig.release_dir(sha)
+    end
+
   end
 end
+
+require 'egads/cli/build'
+require 'egads/cli/upload'
