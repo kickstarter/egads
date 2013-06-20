@@ -22,7 +22,7 @@ describe Egads::S3Tarball do
       subject.upload(ENV['EGADS_CONFIG'])
     end
 
-    it('should exist') { subject.exists?.wont_be_nil }
+    it('should exist') { (!! subject.exists?).must_equal true }
   end
 
 
