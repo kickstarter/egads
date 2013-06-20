@@ -1,25 +1,51 @@
 module Egads
-  class CLI
+  class Build < Thor::Group
+    include Thor::Actions
 
-    desc "build", "[local] Compiles a deployable tarball of the current commit and uploads it to S3"
-    method_option :force, type: :boolean, aliases: '-f', default: false, banner: "Build and overwrite existing tarball on S3"
-    method_option 'no-upload', type: :boolean, default: false, banner: "Don't upload the tarball to S3"
+    desc "[local] Compiles a deployable tarball of the current commit and uploads it to S3"
+    class_option :force, type: :boolean, aliases: '-f', default: false, banner: "Build and overwrite existing tarball on S3"
+    class_option 'no-upload', type: :boolean, default: false, banner: "Don't upload the tarball to S3"
+    argument :rev, type: :string, default: 'HEAD', desc: 'git revision to build'
 
-    attr_reader :rev
-    def build(rev='HEAD')
-      @rev = rev
-      return unless should_build?
+    def check_build
+      say_status :rev, "#{rev} parsed to #{sha}"
+
+      unless should_build?
+        say_status :done, "Tarball for #{sha} already exists. Pass --force to rebuild."
+        exit 0
+      end
+
       say_status :rev, "#{rev} parsed to #{sha}"
       exit 1 unless can_build?
+    end
 
-      # Do build
+    def make_git_archive
       say_status :build, "Making tarball for #{sha}", :yellow
-      make_git_archive
-      append_revision_file
-      run_hooks_for(:build_after)
-      append_extra_paths
-      gzip_archive
+      FileUtils.mkdir_p(File.dirname(tarball.local_tar_path))
+      run_with_code "git archive #{sha} --format=tar > #{tarball.local_tar_path}"
+    end
 
+    def append_revision_file
+      File.open('REVISION', 'w') {|f| f << sha + "\n" }
+      run_with_code "tar -uf #{tarball.local_tar_path} REVISION"
+    end
+
+    def run_after_build_hooks
+      run_hooks_for(:build,:after)
+    end
+
+    def append_extra_paths
+      extra_paths = Config.build_extra_paths
+      if extra_paths.any?
+        run_with_code "tar -uf #{tarball.local_tar_path} #{extra_paths * " "}"
+      end
+    end
+
+    def gzip_archive
+      run_with_code "gzip -9f #{tarball.local_tar_path}"
+    end
+
+    def upload
       invoke(:upload, [sha]) unless options['no-upload']
     end
 
@@ -38,10 +64,7 @@ module Egads
     end
 
     def should_build?
-      if !options[:force] && tarball.exists?
-        say_status :done "Tarball for #{sha} already exists. Pass --force to rebuild."
-        true
-      end
+      !options[:force] && tarball.exists?
     end
 
     def can_build?
@@ -63,27 +86,6 @@ module Egads
         "Cannot build #{short_sha} because the working directory is not clean.",
         "Stash your changes with `git add . && git stash` and try again."
       ]
-    end
-
-    def make_git_archive
-      FileUtils.mkdir_p(File.dirname(tarball.local_tar_path))
-      run_with_code "git archive #{sha} --format=tar > #{tarball.local_tar_path}"
-    end
-
-    def append_revision_file
-      File.open('REVISION', 'w') {|f| f << sha + "\n" }
-      run_with_code "tar -uf #{tarball.local_tar_path} REVISION"
-    end
-
-    def append_extra_paths
-      extra_paths = Config.build_extra_paths
-      if extra_paths.any?
-        run_with_code "tar -uf #{tarball.local_tar_path} #{extra_paths * " "}"
-      end
-    end
-
-    def gzip_archive
-      run_with_code "gzip -9f #{tarball.local_tar_path}"
     end
 
     def error(message)
