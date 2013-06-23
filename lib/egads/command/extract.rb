@@ -4,7 +4,7 @@ module Egads
 
     desc "[remote, plumbing] Downloads tarball for SHA from S3 and extracts it to the filesystem"
     class_option :force, type: :boolean, default: false, banner: "Overwrite existing files"
-    argument :sha, type: :string, required: true, desc: 'The SHA to download and extract'
+    argument :sha, type: :string, required: true, desc: 'git SHA to download and extract'
 
     def setup_environment
       RemoteConfig.setup_environment
