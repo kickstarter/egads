@@ -64,7 +64,7 @@ module Egads
     end
 
     def should_build?
-      !options[:force] && tarball.exists?
+      options[:force] || !tarball.exists?
     end
 
     def can_build?
