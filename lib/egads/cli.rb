@@ -7,24 +7,14 @@ module Egads
     require 'egads/command/extract'
     require 'egads/command/stage'
     require 'egads/command/release'
+    require 'egads/command/trim'
 
     register(Build, 'build', 'build [REV]', '[local] Compiles a deployable tarball of the current commit and uploads it to S3')
     register(Upload, 'upload', 'upload SHA', '[local, plumbing] Uploads a tarball for SHA to S3')
     register(Extract, 'extract', 'extract SHA', '[remote, plumbing] Downloads tarball for SHA from S3 and extracts it to the filesystem')
     register(Stage, 'stage', 'stage SHA', '[remote, plumbing] Downloads tarball for SHA from S3 and extracts it to the filesystem')
     register(Release, 'release', 'release SHA', '[remote, plumbing] Downloads tarball for SHA from S3 and extracts it to the filesystem')
-
-
-    desc "trim N", "[remote, plumbing] Deletes old releases, keeping the N most recent (by mtime)"
-    def trim(n=4)
-      inside RemoteConfig.extract_to do
-        dirs = Dir.glob('*').sort_by{|path| File.mtime(path) }.reverse[n..-1].to_a
-        dirs.each do |dir|
-          say_status :trim, "Deleting #{dir}"
-          FileUtils.rm_rf(dir)
-        end
-      end
-    end
+    register(Trim, 'trime', 'trim [N]', "[remote, plumbing] Deletes old releases, keeping the N most recent (by mtime)")
 
     protected
     # Run command hooks from config file

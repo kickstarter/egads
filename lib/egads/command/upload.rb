@@ -1,6 +1,8 @@
 module Egads
-  class CLI
-    desc "upload SHA", "[local, plumbing] Uploads a tarball for SHA to S3"
+  class Upload < Thor::Group
+    include Thor::Actions
+
+    desc "[local, plumbing] Uploads a tarball for SHA to S3"
     attr_reader :sha
     def upload(sha)
       @sha = sha
