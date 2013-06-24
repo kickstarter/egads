@@ -7,4 +7,15 @@ describe "Egads::Build" do
   it 'should run the correct tasks' do
     subject.commands.keys.must_equal %w(check_build make_git_archive append_revision_file run_after_build_hooks append_extra_paths gzip_archive upload)
   end
+
+  it 'takes one argument' do
+  	subject.arguments.size.must_equal 1
+  end
+
+  it 'has a rev argument' do
+  	rev = subject.arguments.detect{|arg| arg.name == 'rev'}
+  	rev.default.must_equal 'HEAD'
+  	rev.required.must_equal false
+  end
+
 end
