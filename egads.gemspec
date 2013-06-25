@@ -21,6 +21,7 @@ Gem::Specification.new do |s|
   s.add_dependency "thor"
   s.add_development_dependency "rake"
   s.add_development_dependency "minitest"
+  #s.add_development_dependency "simple_mock" # Via http://tatey.com/2012/02/07/mocking-with-minitest-mock-and-simple-delegator/
 
   s.description = %s{
     A collection of scripts for making a deployable tarball of a git commit,
