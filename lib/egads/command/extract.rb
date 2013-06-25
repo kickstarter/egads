@@ -37,6 +37,10 @@ module Egads
     end
 
     protected
+    def release_dir
+      RemoteConfig.release_dir(sha)
+    end
+
     def path
       File.join(release_dir, "#{sha}.tar.gz")
     end
