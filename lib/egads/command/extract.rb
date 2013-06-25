@@ -12,7 +12,8 @@ module Egads
 
     def download
       if should_download?
-        say_status :download, "Downloading tarball for #{sha}"
+        say_status :download, "Downloading tarball for #{sha}", :yellow
+        FileUtils.mkdir_p(release_dir)
         duration = Benchmark.realtime do
           File.open(path, 'w') {|f| f << tarball.contents }
         end
@@ -23,7 +24,7 @@ module Egads
       end
     end
 
-    def extract(sha)
+    def extract
       # Check revision file to see if tarball is already extracted
       if should_extract?
         inside(release_dir) { run_with_code "tar -zxf #{path}" }
