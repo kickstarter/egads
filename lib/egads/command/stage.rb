@@ -1,5 +1,5 @@
 module Egads
-  class Stage < Thor::Group
+  class Stage < Group
     include Thor::Actions
 
 
@@ -12,7 +12,7 @@ module Egads
     end
 
     def extract
-      invoke(:extract, [sha], options)
+      invoke(Egads::Extract, [sha], options)
     end
 
     def run_before_hooks

@@ -19,3 +19,11 @@ describe "Egads::Build" do
   end
 
 end
+
+describe "Egags::Build instance" do
+	subject { Egads::Build.new }
+	
+	it "has rev HEAD" do
+		subject.rev.must_equal 'HEAD'
+	end
+end

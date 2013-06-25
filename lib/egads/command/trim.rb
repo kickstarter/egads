@@ -1,5 +1,5 @@
 module Egads
-  class Trim < Thor::Group
+  class Trim < Group
     include Thor::Actions
 
 

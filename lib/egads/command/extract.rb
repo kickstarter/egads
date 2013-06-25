@@ -1,5 +1,5 @@
 module Egads
-  class Extract < Thor::Group
+  class Extract < Group
     include Thor::Actions
 
     desc "[remote, plumbing] Downloads tarball for SHA from S3 and extracts it to the filesystem"

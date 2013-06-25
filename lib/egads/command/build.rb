@@ -1,5 +1,5 @@
 module Egads
-  class Build < Thor::Group
+  class Build < Group
     include Thor::Actions
 
     desc "[local] Compiles a deployable tarball of the current commit and uploads it to S3"
@@ -46,55 +46,56 @@ module Egads
     end
 
     def upload
-      invoke(:upload, [sha]) unless options['no-upload']
+      invoke(Egads::Upload, [sha]) unless options['no-upload']
     end
 
+    module BuildHelpers
+      def sha
+        @sha ||= run_with_code("git rev-parse --verify #{rev}").strip
+      end
 
-    private
-    def sha
-      @sha ||= run_with_code("git rev-parse --verify #{rev}").strip
+      def short_sha
+        sha[0,7]
+      end
+
+      def tarball
+        @tarball ||= S3Tarball.new(sha)
+      end
+
+      def should_build?
+        options[:force] || !tarball.exists?
+      end
+
+      def can_build?
+        sha_is_checked_out? && working_directory_is_clean?
+      end
+
+      def sha_is_checked_out?
+        head = run_with_code("git rev-parse --verify HEAD", capture: true).strip
+        short_head = head[0,7]
+        head == sha or error [
+          "Cannot build #{short_sha} because #{short_head} is checked out.",
+          "Run `git checkout #{short_sha}` and try again"
+        ]
+      end
+
+      def working_directory_is_clean?
+        run("git status -s", capture: true).empty? or
+        error [
+          "Cannot build #{short_sha} because the working directory is not clean.",
+          "Stash your changes with `git add . && git stash` and try again."
+        ]
+      end
+
+      def error(message)
+        lines = Array(message)
+        say_status :error, lines.shift, :red
+        lines.each {|line| say_status '', line }
+
+        false
+      end
+
     end
-
-    def short_sha
-      sha[0,7]
-    end
-
-    def tarball
-      @tarball ||= S3Tarball.new(sha)
-    end
-
-    def should_build?
-      options[:force] || !tarball.exists?
-    end
-
-    def can_build?
-      sha_is_checked_out? && working_directory_is_clean?
-    end
-
-    def sha_is_checked_out?
-      head = run_with_code("git rev-parse --verify HEAD", capture: true).strip
-      short_head = head[0,7]
-      head == sha or error [
-        "Cannot build #{short_sha} because #{short_head} is checked out.",
-        "Run `git checkout #{short_sha}` and try again"
-      ]
-    end
-
-    def working_directory_is_clean?
-      run("git status -s", capture: true).empty? or
-      error [
-        "Cannot build #{short_sha} because the working directory is not clean.",
-        "Stash your changes with `git add . && git stash` and try again."
-      ]
-    end
-
-    def error(message)
-      lines = Array(message)
-      say_status :error, lines.shift, :red
-      lines.each {|line| say_status '', line }
-
-      false
-    end
-
+    include BuildHelpers
   end
 end

@@ -1,15 +1,16 @@
 module Egads
-  class Upload < Thor::Group
+  class Upload < Group
     include Thor::Actions
 
     desc "[local, plumbing] Uploads a tarball for SHA to S3"
+    argument :sha, type: :string, required: true, desc: 'git SHA to upload'
+
     attr_reader :sha
-    def upload(sha)
+    def upload
       @sha = sha
-      path = tarball.local_gzipped_path
       size = File.size(path)
 
-      say_status :upload, "Uploading tarball (%.1f MB)" % (size.to_f / 2**20)
+      say_status :upload, "Uploading tarball (%.1f MB)" % (size.to_f / 2**20), :yellow
       duration = Benchmark.realtime do
         tarball.upload(path)
       end
@@ -20,9 +21,12 @@ module Egads
 
     private
     def tarball
-      S3Tarball.new(sha)
+      @tarball ||= S3Tarball.new(sha)
     end
 
+    def path
+      tarball.local_gzipped_path
+    end
 
   end
 end

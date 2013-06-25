@@ -1,6 +1,7 @@
 require_relative 'spec_helper'
 
 describe Egads::S3Tarball do
+  setup_configs!
 
   before { ENV['EGADS_CONFIG'] = "example/egads.yml" }
   after { ENV.delete('EGAGS_CONFIG') }
@@ -18,7 +19,6 @@ describe Egads::S3Tarball do
 
   describe 'when uploaded' do
     before do
-      Egads::Config.s3_bucket.save # Ensure bucket exists
       subject.upload(ENV['EGADS_CONFIG'])
     end
 

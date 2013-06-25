@@ -1,5 +1,5 @@
 module Egads
-  class Release < Thor::Group
+  class Release < Group
     include Thor::Actions
 
     desc "[remote] Symlinks SHA to current and restarts services. If needed, stages SHA"
@@ -10,7 +10,7 @@ module Egads
     end
 
     def stage
-      invoke(:stage, [sha], options)
+      invoke(Egads::Stage, [sha], options)
     end
 
     def run_before_release_hooks
