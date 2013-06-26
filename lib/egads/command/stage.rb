@@ -49,7 +49,7 @@ module Egads
 
     def run_after_stage_hooks
       return unless should_stage?
-      run_hooks_for(:stage, :after)
+      inside(dir) { run_hooks_for(:stage, :after) }
     end
 
     def mark_as_staged
