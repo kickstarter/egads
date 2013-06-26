@@ -1,7 +1,9 @@
 # Capistrano configuration.
 # Use `load 'egads/capistrano'` instead of `load 'deploy'` in your Capfile
 Capistrano::Configuration.instance.load do
-  namespace :deploy do
+  deploy_roles = context.fetch(:deploy_roles, [:app, :search, :bg, :resque])
+
+  namespace :deploy, roles: deploy_roles do
     desc "Deploy"
     task :default do
       deploy.upload
@@ -10,12 +12,12 @@ Capistrano::Configuration.instance.load do
     end
 
     desc "Prepares for release by bundling gems, symlinking shared files, etc"
-    task :stage do
+    task :stage, roles: deploy_roles do
       run "egads stage #{sha}"
     end
 
     desc "Runs the release script to symlink a staged deploy and restarts services"
-    task :release do
+    task :release, roles: deploy_roles do
       run "egads release #{sha}"
     end
 
