@@ -4,12 +4,14 @@ module Egads
 
     desc "[local] Compiles a deployable tarball of the current commit and uploads it to S3"
     class_option :force, type: :boolean, aliases: '-f', default: false, banner: "Build and overwrite existing tarball on S3"
+    class_option :wait, type: :boolean, aliases: '-w', default: false, banner: "Wait for the build to exist. Poll S3 every 2 seconds."
     class_option 'no-upload', type: :boolean, default: false, banner: "Don't upload the tarball to S3"
     argument :rev, type: :string, default: 'HEAD', desc: 'git revision to build'
 
     def check_build
       say_status :rev, "#{rev} parsed to #{sha}"
 
+      wait_for_build if options[:wait]
       unless should_build?
         say_status :done, "Tarball for #{sha} already exists. Pass --force to rebuild."
         exit 0
@@ -93,6 +95,17 @@ module Egads
         lines.each {|line| say_status '', line }
 
         false
+      end
+
+      def wait_for_build
+        say_status :wait, "Waiting for tarball to exist...", :yellow
+        loop do
+          start = Time.now
+          break if tarball.exists?
+          printf '.'
+          sleep [2 - (Time.now - start), 0].max
+        end
+        printf "\n"
       end
 
     end
