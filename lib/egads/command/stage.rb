@@ -29,13 +29,13 @@ module Egads
     end
 
     def symlink_system_paths
-      return unless should_stage? && shared_path.present?
+      return unless should_stage? && shared_path
       symlink_directory File.join(shared_path, 'system'), File.join(dir, 'public', 'system')
       symlink_directory File.join(shared_path, 'log'), File.join(dir, 'log')
     end
 
     def symlink_config_files
-      return unless should_stage? && shared_path.present?
+      return unless should_stage? && shared_path
 
       shared_config = File.join(shared_path, 'config')
       if File.directory?(shared_config)

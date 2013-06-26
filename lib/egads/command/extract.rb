@@ -27,7 +27,9 @@ module Egads
     def extract
       # Check revision file to see if tarball is already extracted
       if should_extract?
-        inside(release_dir) { run_with_code "tar -zxf #{path}" }
+        # Silence stderr warnings "Ignoring unknown extended header keyword"
+        # due to BSD/GNU tar.
+        inside(release_dir) { run_with_code "tar -zxf #{path} 2>/dev/null" }
       else
         say_status :done, "Tarball already extracted. Use --force to overwrite"
       end
