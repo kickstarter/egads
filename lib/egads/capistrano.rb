@@ -1,11 +1,12 @@
 # Capistrano configuration.
 # Use `load 'egads/capistrano'` instead of `load 'deploy'` in your Capfile
 Capistrano::Configuration.instance.load do
-  deploy_roles = context.fetch(:deploy_roles, [:app, :search, :bg, :resque])
+  # Set default deploy roles
+  set(:deploy_roles, [:web, :app]) unless exists?(:deploy_roles)
 
-  namespace :deploy, roles: deploy_roles do
+  namespace :deploy do
     desc "Deploy"
-    task :default do
+    task :default, roles: deploy_roles do
       deploy.upload
       deploy.stage
       deploy.release
