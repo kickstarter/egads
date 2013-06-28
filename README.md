@@ -1,8 +1,12 @@
-# egads: Extensible Git-Archive Deploy Strategy
+# egads!!!
+# *Extensible Git-Archive Deploy Strategy*
 
-## Installation
+egads is a set of commands for deploying applications without depending on a git
+server.
 
-For local work (building and uploading tarballs), put `egads` in your Gemfile:
+## Install
+
+Put `egads` in your Gemfile:
 
     # In Gemfile
     gem 'egads', require: nil
