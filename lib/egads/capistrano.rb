@@ -12,6 +12,13 @@ Capistrano::Configuration.instance.load do
       deploy.release
     end
 
+    desc "Deploy and run migrations"
+    task :migrations do
+      Capistrano::CLI.ui.ask("Are you sure you want to run migrations? Press enter to continue or ctrl+c to abort")
+      set :default_environment, {'MIGRATE' => '1'}
+      deploy.default
+    end
+
     desc "Prepares for release by bundling gems, symlinking shared files, etc"
     task :stage, roles: deploy_roles do
       run "egads stage #{sha}"
