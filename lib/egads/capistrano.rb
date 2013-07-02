@@ -1,5 +1,6 @@
 # Capistrano configuration.
 # Use `load 'egads/capistrano'` instead of `load 'deploy'` in your Capfile
+# Requires "full_sha" to be set
 Capistrano::Configuration.instance.load do
   # Set default deploy roles
   set(:deploy_roles, [:web, :app]) unless exists?(:deploy_roles)
@@ -21,12 +22,12 @@ Capistrano::Configuration.instance.load do
 
     desc "Prepares for release by bundling gems, symlinking shared files, etc"
     task :stage, roles: deploy_roles do
-      run "egads stage #{sha}"
+      run "egads stage #{full_sha}"
     end
 
     desc "Runs the release script to symlink a staged deploy and restarts services"
     task :release, roles: deploy_roles do
-      run "egads release #{sha}"
+      run "egads release #{full_sha}"
     end
 
     desc "Checks that a deployable tarball is on S3; creates it if missing"
