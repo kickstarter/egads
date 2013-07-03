@@ -33,7 +33,7 @@ Capistrano::Configuration.instance.load do
 
     desc "Checks that a deployable tarball is on S3; creates it if missing"
     task :upload do
-      `bundle exec egads build`
+      `bundle exec egads build #{full_sha}`
       abort "Failed to upload build" if $?.exitstatus != 0
     end
   end
