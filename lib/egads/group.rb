@@ -22,7 +22,7 @@ module Egads
     def run_hooks_for(cmd, hook)
       say_status :hooks, "Running #{cmd} #{hook} hooks"
       Config.hooks_for(cmd, hook).each do |command|
-        run_with_code command
+        say run_with_code(command, capture: true)
       end
     end
 
