@@ -40,7 +40,7 @@ module Egads
 
     def trim
       FileUtils.touch(dir) # Ensure this release isn't trimmed
-      invoke(:trim, [4], {})
+      invoke(Egads::Trim, [4], {})
     end
 
     protected
