@@ -9,7 +9,7 @@ Capistrano::Configuration.instance.load do
   namespace :deploy do
     desc "Deploy"
     task :default do
-      deploy.upload
+      deploy.check
       deploy.stage
       deploy.release
     end
@@ -32,9 +32,12 @@ Capistrano::Configuration.instance.load do
     end
 
     desc "Checks that a deployable tarball is on S3; creates it if missing"
-    task :upload do
-      `bundle exec egads build #{full_sha}`
-      abort "Failed to upload build" if $?.exitstatus != 0
+    task :check do
+      logger.info "Checking tarball for #{full_sha}"
+      logger.info "To build the tarball locally, run `bundle exec egads build #{full_sha}"
+      logger.info "Waiting for tarball..."
+      `bundle exec egads check --wait #{full_sha}`
+      abort "Failed to check build" if $?.exitstatus != 0
     end
   end
 end

@@ -1,11 +1,11 @@
 require_relative 'spec_helper'
 
-describe "Egads::Build" do
+describe "Egads::Check" do
   setup_configs!
-  subject { Egads::Build }
+  subject { Egads::Check }
 
   it 'should run the correct tasks' do
-    subject.commands.keys.must_equal %w(check_build make_git_archive append_revision_file run_after_build_hooks append_extra_paths gzip_archive upload)
+    subject.commands.keys.must_equal %w(check)
   end
 
   it 'takes one argument' do
@@ -21,7 +21,7 @@ describe "Egads::Build" do
 end
 
 describe "Egags::Build instance" do
-  subject { Egads::Build.new }
+  subject { Egads::Check.new }
 
   it "has rev HEAD" do
     subject.rev.must_equal 'HEAD'
