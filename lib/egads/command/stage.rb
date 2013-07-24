@@ -24,7 +24,7 @@ module Egads
       return unless should_stage?
 
       inside(dir) do
-        run_with_code("bundle install #{RemoteConfig.bundler_options}") if File.readable?("Gemfile")
+        run_with_code("bundle install #{RemoteConfig.bundler_options}", stream: true) if File.readable?("Gemfile")
       end
     end
 

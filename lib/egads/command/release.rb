@@ -28,7 +28,7 @@ module Egads
 
       inside release_to do
         # Restart services
-        run_with_code(RemoteConfig.restart_command)
+        run_with_code(RemoteConfig.restart_command, stream: true)
       end
     end
 

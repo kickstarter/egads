@@ -1,20 +1,35 @@
+require 'open3'
 module Egads
   class CommandError < Thor::Error; end
 
   class Group < Thor::Group
 
-    protected
-    def run_with_code(command, config={})
-      result = nil
-      duration = Benchmark.realtime do
-        result = run(command, config.merge(capture: true))
-      end
-      say_status :done, "Finished in %.1f seconds" % duration
+    # Override exit_on_failure?
+    def exit_on_failure?
+      true
+    end
 
-      if $? != 0
-        raise CommandError.new("`#{command}` failed with exit status #{$?.exitstatus.inspect}")
+    protected
+    def run_with_code(command, options={})
+
+      say_status :run, "#{command}", options.fetch(:verbose, true)
+
+      capture = []
+      duration = Benchmark.realtime do
+        Open3.popen2e(command) do |_, out, thread|
+          out.each do |line|
+            puts line if options[:stream]
+            capture << line
+          end
+
+          unless thread.value == 0
+            raise CommandError.new("`#{command}` failed with exit status #{thread.value.exitstatus.inspect}")
+          end
+        end
       end
-      result
+      say_status :done, "Finished in %.1f seconds" % duration, options.fetch(:verbose, true)
+
+      capture.join
     end
 
     # Run command hooks from config file
@@ -22,7 +37,7 @@ module Egads
     def run_hooks_for(cmd, hook)
       say_status :hooks, "Running #{cmd} #{hook} hooks"
       Config.hooks_for(cmd, hook).each do |command|
-        say run_with_code(command, capture: true)
+        run_with_code(command, stream: true)
       end
     end
 
