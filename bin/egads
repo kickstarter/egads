@@ -1,5 +1,3 @@
 #!/usr/bin/env ruby
-# TODO: remove this
-$: << './lib'
 require 'egads'
 Egads::Command.start
