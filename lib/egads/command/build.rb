@@ -60,7 +60,7 @@ module Egads
       end
 
       def sha_is_checked_out?
-        head = run_with_code("git rev-parse --verify HEAD", capture: true).strip
+        head = run_with_code("git rev-parse --verify HEAD").strip
         short_head = head[0,7]
         head == sha or error [
           "Cannot build #{short_sha} because #{short_head} is checked out.",
