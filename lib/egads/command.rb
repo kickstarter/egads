@@ -23,5 +23,11 @@ module Egads
     register(Release, 'release', 'release SHA', '[remote, plumbing] Downloads tarball for SHA from S3 and extracts it to the filesystem')
     register(Trim, 'trime', 'trim [N]', "[remote, plumbing] Deletes old releases, keeping the N most recent (by mtime)")
 
+    map '--version' => :version
+    desc :version, "Prints the version"
+    def version
+      puts "#{File.basename($0)} #{VERSION}"
+    end
+
   end
 end

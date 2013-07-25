@@ -5,6 +5,7 @@ require 'benchmark'
 
 module Egads; end
 
+require 'egads/version'
 require 'egads/config'
 require 'egads/s3_tarball'
 require 'egads/group'
