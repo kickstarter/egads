@@ -4,8 +4,8 @@ module Egads
 
   class Group < Thor::Group
 
-    # Override exit_on_failure?
-    def exit_on_failure?
+    # Always exit on failure
+    def self.exit_on_failure?
       true
     end
 

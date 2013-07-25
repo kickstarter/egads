@@ -1,5 +1,11 @@
 module Egads
   class Command < Thor
+
+    # Always exit on failure
+    def self.exit_on_failure?
+      true
+    end
+
     require 'egads/local_helpers'
     require 'egads/command/check'
     require 'egads/command/build'

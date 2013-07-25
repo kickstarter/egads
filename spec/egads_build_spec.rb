@@ -18,6 +18,9 @@ describe "Egads::Build" do
     rev.required.must_equal false
   end
 
+  it "exits on failure" do
+    subject.exit_on_failure?.must_equal true
+  end
 end
 
 describe "Egags::Build instance" do
@@ -25,9 +28,5 @@ describe "Egags::Build instance" do
 
   it "has rev HEAD" do
     subject.rev.must_equal 'HEAD'
-  end
-
-  it "exits on failure" do
-    subject.exit_on_failure?.must_equal true
   end
 end
