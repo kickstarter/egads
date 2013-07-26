@@ -10,7 +10,7 @@ module Egads
     end
 
     def tarball
-      @tarball ||= S3Tarball.new(sha)
+      @tarball ||= S3Tarball.new(sha, seed: options[:seed])
     end
 
   end

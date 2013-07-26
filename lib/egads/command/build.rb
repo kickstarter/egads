@@ -3,9 +3,10 @@ module Egads
     include Thor::Actions
     include Egads::LocalHelpers
 
-    desc "[local] Compiles a deployable tarball of the current commit and uploads it to S3"
+    desc "[local] Compiles a patch of the current commit and uploads it to S3"
     class_option :force, type: :boolean, aliases: '-f', default: false, banner: "Build and overwrite existing tarball on S3"
     class_option 'no-upload', type: :boolean, default: false, banner: "Don't upload the tarball to S3"
+    class_option :seed, type: :boolean, default: false, banner: "Make a complete tarball instead of a patch"
     argument :rev, type: :string, default: 'HEAD', desc: 'git revision to build'
 
     def check_build
