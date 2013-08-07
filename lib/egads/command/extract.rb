@@ -49,7 +49,7 @@ module Egads
     end
 
     def tarball
-      @tarball ||= S3Tarball.new(sha, true)
+      @tarball ||= S3Tarball.new(sha, remote: true)
     end
 
     def should_download?

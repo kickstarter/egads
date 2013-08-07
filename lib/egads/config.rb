@@ -42,6 +42,10 @@ module Egads
     def self.build_extra_paths
       config['build'] && Array(config['build']['extra_paths'])
     end
+
+    def self.seed_tag
+      config['seed_tag'] || "egads-seed"
+    end
   end
 
   # Remote config for the extract command (before data in tarball is available)
