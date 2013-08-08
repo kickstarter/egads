@@ -5,8 +5,13 @@ s3:
   secret_key: mysecret
   prefix: my_project # Optional prefix for S3 paths
 
+# Path where seed files are cached
+cached_seeds_to: /var/apps/my_project/seeds
+
 # Path where tarballs are extracted
 extract_to: /var/apps/my_project/releases
+
+# Path where the currently running version is symlinked
 release_to: /var/apps/my_project/current
 
 restart_command: /etc/init.d/rails_services restart
