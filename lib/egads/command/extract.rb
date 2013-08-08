@@ -32,7 +32,7 @@ module Egads
         # due to BSD/GNU tar differences.
         inside(release_dir) { run_with_code "tar -zxf #{path} 2>/dev/null" }
         seed_sha = Pathname.new(release_dir).join("egads-seed").read.strip
-        invoke(Egads::Extract, [seed_sha], force: options[:force], seed: options[:seed])
+        invoke(Egads::Extract, [seed_sha], force: options[:force], seed: true)
       else
         say_status :done, "Tarball already extracted. Use --force to overwrite"
       end
