@@ -39,7 +39,7 @@ module Egads
     end
 
     def mark_as_extracted
-      FileUtils.touch(extract_flag_path)
+      FileUtils.touch(extract_flag_path) unless options[:seed]
     end
 
     protected
