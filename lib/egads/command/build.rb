@@ -47,10 +47,12 @@ module Egads
         run_with_code "git archive #{build_sha} --output #{tarball.local_tar_path}"
       else
         # Patch tarball
-        File.open('egads-seed', 'w') {|f| f << Config.seed_tag + "\n" }
-        run_with_code "git diff --binary refs/tags/#{Config.seed_tag} #{build_sha} > #{patch_path}"
-        run_with_code "tar -zcf #{tarball.local_tar_path} #{patch_path} egads-seed"
-        run_with_code "rm #{patch_path} egads-seed"
+        seed_sha = run_with_code("git rev-parse --verify refs/tags/#{Config.seed_tag}").strip
+        File.open('egads-seed', 'w') {|f| f << seed_sha + "\n" }
+        patch_files = [patch_path, 'egads-seed']
+        run_with_code "git diff --binary #{seed_sha} #{build_sha} > #{patch_path}"
+        run_with_code "tar -zcf #{tarball.local_tar_path} #{patch_files * ' '}"
+        patch_files.each {|f| File.delete(f) }
       end
 
     end
@@ -66,7 +68,6 @@ module Egads
     def tag_seed
       if options[:seed]
         run_with_code "git tag -f -a -m 'egads seed' #{Config.seed_tag} #{build_sha} && git push -f origin tag #{Config.seed_tag}"
-        # Tag & push
       end
     end
 
