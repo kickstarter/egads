@@ -36,7 +36,7 @@ module Egads
     protected
     def apply_patch
       inside patch_dir do
-        run_with_code "patch < #{sha}.patch"
+        run_with_code "patch -p1 < #{sha}.patch"
       end
     end
 
