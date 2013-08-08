@@ -47,10 +47,12 @@ module Egads
         run_with_code "git archive #{build_sha} --output #{tarball.local_tar_path}"
       else
         # Patch tarball
-        seed_sha = run_with_code("git rev-parse --verify refs/tags/#{Config.seed_tag}").strip
-        File.open('egads-seed', 'w') {|f| f << seed_sha + "\n" }
+        seed_ref = "refs/tags/#{Config.seed_tag}"
+        # NB: the seed tarball is named after the parent of seed tag
+        seed_parent = run_with_code("git rev-parse --verify #{seed_ref}^").strip
+        File.open('egads-seed', 'w') {|f| f << seed_parent + "\n" }
         patch_files = [patch_path, 'egads-seed']
-        run_with_code "git diff --binary #{seed_sha} #{build_sha} > #{patch_path}"
+        run_with_code "git diff --binary #{seed_ref} #{build_sha} > #{patch_path}"
         run_with_code "tar -zcf #{tarball.local_tar_path} #{patch_files * ' '}"
         patch_files.each {|f| File.delete(f) }
       end
