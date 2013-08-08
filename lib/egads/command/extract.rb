@@ -42,15 +42,15 @@ module Egads
 
     def finish_extraction
       if options[:force]
-        say :delete, "Removing release dir #{release_dir} if exists", :yellow
+        say_status :delete, "Removing release dir #{release_dir} if exists", :yellow
         FileUtils.rm_rf(release_dir)
       end
 
-      say :extract, "Moving #{patch_dir} to #{release_dir}"
+      say_status :extract, "Moving #{patch_dir} to #{release_dir}"
       File.rename patch_dir, release_dir
-      say :done, "Extraction complete"
+      say_status :done, "Extraction complete"
     rescue Errno::ENOTEMPTY
-      say :error, "#{release_dir} already exists! Did another process create it?", :red
+      say_status :error, "#{release_dir} already exists! Did another process create it?", :red
       raise
     end
 
