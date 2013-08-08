@@ -43,12 +43,15 @@ module Egads
 
     # Symlinks a directory
     # NB that `ln -f` doesn't work with directories.
-    # This is not atomic.
+    # Use an extra temporary symlink for atomicity (equivalent to `mv -T`)
     def symlink_directory(src, dest)
       raise ArgumentError.new("#{src} is not a directory") unless File.directory?(src)
       say_status :symlink, "from #{src} to #{dest}"
-      FileUtils.rm_rf(dest)
-      FileUtils.ln_s(src, dest)
+      tmp = "#{dest}-new-#{rand(2**32)}"
+      # Make a temporary symlink
+      File.symlink(src, tmp)
+      # Atomically rename the symlink, possibly overwriting an existing symlink
+      File.rename(tmp, dest)
     end
 
     def symlink(src, dest)
