@@ -4,20 +4,66 @@ module Egads
 
     desc "[remote, plumbing] Downloads tarball for SHA from S3 and extracts it to the filesystem"
     class_option :force, type: :boolean, default: false, banner: "Overwrite existing files"
-    class_option :seed, type: :boolean, default: false, banner: "extract a seed build"
     argument :sha, type: :string, required: true, desc: 'git SHA to download and extract'
+
+    attr_accessor :seed_sha, :seed_path
 
     def setup_environment
       RemoteConfig.setup_environment
     end
 
-    def download
-      if should_download?
+    def extract
+      if should_extract?
+        # Download_patch
+        do_download(sha, File.join(patch_dir, "#{sha}.tar.gz"), 'patch')
+
+        do_extract patch_path
+
+        # Download seed
+        self.seed_sha = Pathname.new(patch_dir).join("egads-seed").read.strip
+        self.seed_path = File.join(RemoteConfig.seed_dir, "#{seed_sha}.tar.gz")
+        do_download(seed_sha, seed_path, 'seed')
+
+        do_extract seed_path
+
+        apply_patch
+        finish_extraction
+      else
+        say_status :done, "#{sha} already extracted. Use --force to overwrite"
+      end
+    end
+
+    protected
+    def apply_patch
+      inside patch_dir do
+        run_with_code "patch < #{sha}.patch"
+      end
+    end
+
+    def finish_extraction
+      if options[:force]
+        say :delete, "Removing release dir #{release_dir} if exists", :yellow
+        FileUtils.rm_rf(release_dir)
+      end
+
+      say :extract, "Moving #{patch_dir} to #{release_dir}"
+      File.rename patch_dir, release_dir
+      say :done, "Extraction complete"
+    rescue Errno::ENOTEMPTY
+      say :error, "#{release_dir} already exists! Did another process create it?", :red
+      raise
+    end
+
+    def do_download(sha, path, type='patch')
+      if should_download?(path)
         say_status :download, "Downloading #{type} tarball for #{sha}", :yellow
-        FileUtils.mkdir_p(download_dir)
+        FileUtils.mkdir_p(File.dirname(path))
+        tarball = S3Tarball.new(sha, remote: true, seed: 'seed' == type)
+        tmp_path = [path, 'tmp', rand(2**32)] * '.' # Use tmp path for atomicity
         duration = Benchmark.realtime do
-          File.open(path, 'w') {|f| f << tarball.contents }
+          File.open(tmp_path, 'w') {|f| f << tarball.contents }
         end
+        File.rename(tmp_path, path)
         size = File.size(path)
         say_status :done, "Downloaded in %.1f seconds (%.1f KB/s)" % [duration, (size.to_f / 2**10) / duration]
       else
@@ -25,54 +71,36 @@ module Egads
       end
     end
 
-    def extract
-      # Check revision file to see if tarball is already extracted
-      if should_extract?
+    def do_extract(path)
+      inside(patch_dir) do
         # Silence stderr warnings "Ignoring unknown extended header keyword"
         # due to BSD/GNU tar differences.
-        inside(release_dir) { run_with_code "tar -zxf #{path} 2>/dev/null" }
-        seed_sha = Pathname.new(release_dir).join("egads-seed").read.strip
-        invoke(Egads::Extract, [seed_sha], force: options[:force], seed: true)
-      else
-        say_status :done, "Tarball already extracted. Use --force to overwrite"
+        run_with_code "tar -zxf #{path} 2>/dev/null"
       end
     end
 
-    def mark_as_extracted
-      FileUtils.touch(extract_flag_path) unless options[:seed]
-    end
-
-    protected
+    # Directory created upon successful extraction
     def release_dir
       RemoteConfig.release_dir(sha)
     end
 
-    def download_dir
-      options[:seed] ? RemoteConfig.seed_dir : release_dir
+    # Directory where in-progress extraction occurs
+    # Avoids troublesome edge cases where a patch may not not have applied cleanly,
+    # or egads crashes during the extraction process
+    def patch_dir
+      @patch_dir ||= [release_dir, 'extracting', Time.now.strftime("%Y%m%d%H%M%S")] * '.'
     end
 
-    def path
-      File.join(download_dir, "#{sha}.tar.gz")
+    def patch_path
+      File.join(patch_dir, "#{sha}.tar.gz")
     end
 
-    def tarball
-      @tarball ||= S3Tarball.new(sha, remote: true, seed: options[:seed])
-    end
-
-    def should_download?
+    def should_download?(path)
       options[:force] || File.zero?(path) || !File.exists?(path)
     end
 
-    def extract_flag_path
-      File.join(release_dir, '.egads-extract-success')
-    end
-
     def should_extract?
-      !options[:seed] && (options[:force] || !File.exists?(extract_flag_path))
-    end
-
-    def type
-      options[:seed] ? 'seed' : 'patch'
+      options[:force] || !File.directory?(release_dir)
     end
 
   end

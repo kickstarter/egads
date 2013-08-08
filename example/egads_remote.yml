@@ -6,7 +6,7 @@ s3:
   prefix: my_project # Optional prefix for S3 paths
 
 # Path where seed files are cached
-cached_seeds_to: /var/apps/my_project/seeds
+cache_seeds_to: /var/apps/my_project/seeds
 
 # Path where tarballs are extracted
 extract_to: /var/apps/my_project/releases

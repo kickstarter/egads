@@ -68,6 +68,10 @@ module Egads
       config['extract_to']
     end
 
+    def self.seed_dir
+      config['cache_seeds_to']
+    end
+
     def self.release_dir(sha)
       File.join(config['extract_to'], sha)
     end
