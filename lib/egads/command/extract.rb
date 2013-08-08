@@ -3,7 +3,7 @@ module Egads
     include Thor::Actions
 
     desc "[remote, plumbing] Downloads tarball for SHA from S3 and extracts it to the filesystem"
-    class_option :force, type: :boolean, default: false, banner: "Overwrite existing files"
+    class_option :force, type: :boolean, aliases: '-f', default: false, banner: "Overwrite existing files"
     argument :sha, type: :string, required: true, desc: 'git SHA to download and extract'
 
     attr_accessor :seed_sha, :seed_path
