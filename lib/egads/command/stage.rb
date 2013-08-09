@@ -30,8 +30,13 @@ module Egads
 
     def symlink_system_paths
       return unless should_stage? && shared_path
-      symlink_directory File.join(shared_path, 'system'), File.join(dir, 'public', 'system')
-      symlink_directory File.join(shared_path, 'log'), File.join(dir, 'log')
+      public_system_dest = File.join(dir, 'public', 'system')
+      FileUtils.rm_rf(public_system_dest)
+      File.symlink File.join(shared_path, 'system'), public_system_dest
+
+      log_dest = File.join(dir, 'log')
+      FileUtils.rm_rf log_dest
+      File.symlink File.join(shared_path, 'log'), log_dest
     end
 
     def symlink_config_files
