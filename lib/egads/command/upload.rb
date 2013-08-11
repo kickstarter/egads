@@ -4,7 +4,7 @@ module Egads
 
     desc "[local, plumbing] Uploads a tarball for SHA to S3"
     argument :sha, type: :string, required: true, desc: 'git SHA to upload'
-    class_option :seed, type: :boolean, default: false, banner: "Builds and tags a complete tarball for more efficient patches"
+    class_option :seed, type: :boolean, default: false, banner: "Uploads a seed tarball"
 
 
     attr_reader :sha

@@ -41,9 +41,8 @@ module Egads
       end
     end
 
-    # Symlinks a directory
+    # Symlinks a directory (not atomically)
     # NB that `ln -f` doesn't work with directories.
-    # Use an extra temporary symlink for atomicity (equivalent to `mv -T`)
     def symlink_directory(src, dest)
       raise ArgumentError.new("#{src} is not a directory") unless File.directory?(src)
       say_status :symlink, "from #{src} to #{dest}"
