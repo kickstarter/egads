@@ -1,9 +1,10 @@
 module Egads
   class S3Tarball
-    attr_reader :sha, :remote
-    def initialize(sha, remote = false)
-      @sha = sha
-      @remote = remote
+    attr_reader :sha, :remote, :seed
+    def initialize(sha, options = {})
+      @sha    = sha
+      @remote = options[:remote]
+      @seed   = options[:seed]
     end
 
     def config
@@ -11,7 +12,11 @@ module Egads
     end
 
     def key
-      [config.s3_prefix, "#{sha}.tar.gz"].compact * '/'
+      [
+        config.s3_prefix,
+        seed ? 'seeds' : nil,
+        "#{sha}.tar.gz"
+      ].compact * '/'
     end
 
     def exists?
@@ -19,14 +24,10 @@ module Egads
     end
 
     def local_tar_path
-      "tmp/#{sha}.tar"
+      "tmp/#{sha}.tar.gz"
     end
 
-    def local_gzipped_path
-      "#{local_tar_path}.gz"
-    end
-
-    def upload(path=local_gzipped_path)
+    def upload(path=local_tar_path)
       File.open(path) {|f|
         bucket.files.create(key: key, body: f)
       }
@@ -42,4 +43,3 @@ module Egads
     end
   end
 end
-

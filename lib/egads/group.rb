@@ -41,14 +41,13 @@ module Egads
       end
     end
 
-    # Symlinks a directory
+    # Symlinks a directory (not atomically)
     # NB that `ln -f` doesn't work with directories.
-    # This is not atomic.
     def symlink_directory(src, dest)
       raise ArgumentError.new("#{src} is not a directory") unless File.directory?(src)
       say_status :symlink, "from #{src} to #{dest}"
       FileUtils.rm_rf(dest)
-      FileUtils.ln_s(src, dest)
+      File.symlink(src, dest)
     end
 
     def symlink(src, dest)

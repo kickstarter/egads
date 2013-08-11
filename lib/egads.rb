@@ -2,6 +2,7 @@ require 'yaml'
 require 'fog'
 require 'thor'
 require 'benchmark'
+require 'pathname'
 
 module Egads; end
 
