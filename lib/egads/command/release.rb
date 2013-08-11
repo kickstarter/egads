@@ -20,7 +20,7 @@ module Egads
 
     def symlink_release
       return unless should_release?
-      symlink_directory(dir, release_to)
+      atomic_symlink(dir, release_to)
     end
 
     def restart
@@ -59,6 +59,19 @@ module Egads
     def should_release?
       @should_release = options[:force] || dir != current_symlink_destination unless defined?(@should_release)
       @should_release
+    end
+
+    # Symlinks src to dest, even if dest is an existing directory symlink
+    # NB that `ln -f` doesn't work with directories.
+    # Use an extra temporary symlink for atomicity (equivalent to `mv -T`)
+    def atomic_symlink(src, dest)
+      raise ArgumentError.new("#{src} is not a directory") unless File.directory?(src)
+      say_status :symlink, "from #{src} to #{dest}"
+      tmp = "#{dest}-new-#{rand(2**32)}"
+      # Make a temporary symlink
+      File.symlink(src, tmp)
+      # Atomically rename the symlink, possibly overwriting an existing symlink
+      File.rename(tmp, dest)
     end
   end
 end

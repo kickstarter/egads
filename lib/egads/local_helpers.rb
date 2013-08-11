@@ -1,5 +1,5 @@
 module Egads
-  # Some helper methods for `check` and `upload`
+  # Some helper methods for all local commands
   module LocalHelpers
     def sha
       @sha ||= run_with_code("git rev-parse --verify #{rev}").strip
@@ -10,7 +10,7 @@ module Egads
     end
 
     def tarball
-      @tarball ||= S3Tarball.new(sha)
+      @tarball ||= S3Tarball.new(sha, seed: options[:seed])
     end
 
   end
