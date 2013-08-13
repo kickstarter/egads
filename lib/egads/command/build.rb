@@ -47,7 +47,7 @@ module Egads
         run_with_code "git archive #{build_sha} --output #{tarball.local_tar_path}"
       else
         # Patch tarball
-        seed_ref = "refs/tags/#{Config.seed_tag}"
+        seed_ref = "refs/remotes/origin/#{Config.seed_branch}"
         # NB: the seed tarball is named after the parent of seed tag
         seed_parent = run_with_code("git rev-parse --verify #{seed_ref}^").strip
         File.open('egads-seed', 'w') {|f| f << seed_parent + "\n" }
@@ -67,9 +67,9 @@ module Egads
       invoke(Egads::Upload, [sha], force: options[:force], seed: options[:seed]) unless options['no-upload']
     end
 
-    def tag_seed
+    def push_seed
       if options[:seed]
-        run_with_code "git tag -f -a -m 'egads seed' #{Config.seed_tag} #{build_sha} && git push -f origin tag #{Config.seed_tag}"
+        run_with_code "git push -f origin #{build_sha}:refs/heads/#{Config.seed_branch}"
       end
     end
 

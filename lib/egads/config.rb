@@ -43,8 +43,8 @@ module Egads
       config['build'] && Array(config['build']['extra_paths'])
     end
 
-    def self.seed_tag
-      config['seed_tag'] || "egads-seed"
+    def self.seed_branch
+      config['seed_branch'] || "egads-seed"
     end
   end
 

@@ -5,7 +5,7 @@ describe "Egads::Build" do
   subject { Egads::Build }
 
   it 'should run the correct tasks' do
-    subject.commands.keys.must_equal %w(check_build run_before_build_hooks write_revision_file commit_extra_paths make_tarball run_after_build_hooks upload tag_seed)
+    subject.commands.keys.must_equal %w(check_build run_before_build_hooks write_revision_file commit_extra_paths make_tarball run_after_build_hooks upload push_seed)
   end
 
   it 'takes one argument' do
