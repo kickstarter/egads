@@ -95,7 +95,7 @@ module Egads
         run("git status -s", capture: true).empty? or
         error [
           "Cannot build #{short_sha} because the working directory is not clean.",
-          "Stash your changes with `git add . && git stash` and try again."
+          "Stash your changes with `git stash --include-untracked` and try again."
         ]
       end
 
