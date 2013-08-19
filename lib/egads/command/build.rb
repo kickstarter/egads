@@ -34,7 +34,7 @@ module Egads
     def commit_extra_paths
       extra_paths = ["REVISION"]
       extra_paths += Config.build_extra_paths
-      run_with_code("git add -f #{extra_paths * ' '} && git commit --no-verify -m 'egads build'")
+      run_with_code("git add -f #{extra_paths * ' '} && git commit --no-verify -m '[egads seed] [skip ci]'")
       # Get the build SHA
       self.build_sha = run_with_code("git rev-parse --verify HEAD").strip
       run_with_code "git reset #{sha}" # Reset to original SHA
