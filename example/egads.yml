@@ -4,6 +4,9 @@ s3:
   secret_key: mysecret
   prefix: my_project # Optional prefix for S3 paths
 
+# Branch to which seed builds are pushed. Defaults to 'egads-seed'
+seed_branch: 'egads-seed'
+
 build:
   # Additional paths to include in the built tarball
   extra_paths:
