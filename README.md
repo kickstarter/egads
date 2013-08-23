@@ -56,3 +56,9 @@ The deploy process is:
 * Run `egads build` from a server with a full git checkout (e.g. your local machine). This ensures there's a tarball for the remote servers to download.
 * Run `egads stage SHA` on all the remote servers to download, extract, and configure the SHA for release.
 * Run `egads release SHA` on all the remote servers to symlink the staged SHA to 'current', and restart services.
+
+## License
+
+Copyright (c) 2013 Kickstarter, Inc
+
+Released under an [MIT License](http://opensource.org/licenses/MIT)

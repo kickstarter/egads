@@ -8,6 +8,7 @@ Gem::Specification.new do |s|
   s.homepage          = "https://github.com/kickstarter/egads"
   s.email             = ["aaron@ktheory.com"]
   s.authors           = ["Aaron Suggs"]
+  s.license           = 'MIT'
 
   s.files         = `git ls-files`.split($/)
   s.executables   = s.files.grep(%r{^bin/}).map{ |f| File.basename(f) }
