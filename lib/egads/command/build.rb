@@ -32,6 +32,9 @@ module Egads
     end
 
     def commit_extra_paths
+      # Double-check that SHA hasn't changed since we started building
+      exit 1 unless sha_is_checked_out?
+
       extra_paths = ["REVISION"]
       extra_paths += Config.build_extra_paths
       run_with_code("git add -f #{extra_paths * ' '} && git commit --no-verify -m '[egads seed] [ci skip]'")
