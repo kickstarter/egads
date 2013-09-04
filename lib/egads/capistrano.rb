@@ -34,7 +34,11 @@ Capistrano::Configuration.instance.load do
     desc "Builds a deployable tarball and uploads it to S3"
     task :build do
       logger.info "Building tarball for #{full_sha}"
-      `bundle exec egads build #{full_sha}`
+      # Use fork/exec for more obvious output
+      pid = fork do
+        exec "bundle exec egads build #{full_sha}"
+      end
+      Process.waitpid(pid)
       abort "Failed to build" if $?.exitstatus != 0
     end
 
