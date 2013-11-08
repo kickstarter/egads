@@ -9,6 +9,10 @@ Status](https://travis-ci.org/kickstarter/egads.png)](https://travis-ci.org/kick
 [![Code
 Climate](https://d3s6mut3hikguw.cloudfront.net/github/kickstarter/egads.png)](https://codeclimate.com/github/kickstarter/egads)
 
+## What it is; how it works
+
+
+
 ## Install
 
 Put `egads` in your Gemfile:
@@ -23,7 +27,8 @@ So install `egads` as a system gem:
 
 ## Commands
 
-See `egads -h` for the most robust & up-to-date info. Here's a whirlwind tour.
+See `egads -h` for the most robust & up-to-date info. Here's a whirlwind tour of
+the important stuff.
 
 Egads has two types of commands. *Local* commands run on your development machine or continuous integration environment. *Remote* commands run on deployed servers.
 
@@ -37,23 +42,21 @@ Commands are either *porcelain* commands that you should call directly as part o
 
 ### Remote commands
 
-* `egads stage SHA` - Prepares an extracted tarball for release: runs bundler, copies config files, etc.
+* `egads stage SHA` - Extracts and prepares tarball for release; runs bundler, copies config files, etc.
 * `egads release SHA` - Symlinks a staged release to current, restarts services
-* `egads extract SHA` - (plumbing, called by `stage`) Downloads and untars a tarball from S3.
-* `egads clean` - (plumbing, called by `release`) Deletes old releases to free space.
 
 ## Configuration
 
 There are two config files:
 
 * `egads.yml` ([example](example/egads.yml)) is in your git repo and tarballs. It has instructions for building, staging, and releasing tarballs.
-* `/etc/egads.yml` ([example](example/egads_remote.yml)) on remote servers has some configuration for downloading and extracting tarballs from S3; and some environment variables that could vary across environments. This file is presumably provisioned by a tool like Chef or Puppet.
+* `/etc/egads.yml` ([example](example/egads_remote.yml)) on remote servers has some configuration for downloading and extracting tarballs from S3; and environment variables that could vary across environments. This file is presumably provisioned by a tool like Chef or Puppet.
 
 ## Deploy process
 
 The deploy process is:
 
-* Run `egads build` from a server with a full git checkout (e.g. your local machine). This ensures there's a tarball for the remote servers to download.
+* Run `egads build` from a server with a full git checkout (i.e. your local machine, or CI server). This ensures there's a tarball for the remote servers to download.
 * Run `egads stage SHA` on all the remote servers to download, extract, and configure the SHA for release.
 * Run `egads release SHA` on all the remote servers to symlink the staged SHA to 'current', and restart services.
 
