@@ -11,7 +11,7 @@ Climate](https://d3s6mut3hikguw.cloudfront.net/github/kickstarter/egads.png)](ht
 
 ## What it is; how it works
 
-
+WRITE ME!!!
 
 ## Install
 
@@ -24,6 +24,16 @@ On remote machines (to which you deploy), `egads` must be in your PATH.
 So install `egads` as a system gem:
 
     sudo gem install egads
+
+### Capistrano integration
+
+To use egads with capistrano, just load the egads recipes instead of the default
+deploy recipes:
+
+```ruby
+# In Capfile, instead of `load 'deploy'`
+load 'egads/capistrano'
+```
 
 ## Commands
 
