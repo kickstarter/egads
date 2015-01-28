@@ -10,9 +10,8 @@ Fog.mock!
 SHA = 'deadbeef' * 5 # Test git sha
 
 begin
-  require 'debugger'
+  require 'pry'
 rescue LoadError
-  puts "Skipping debugger"
 end
 
 # Extensions
