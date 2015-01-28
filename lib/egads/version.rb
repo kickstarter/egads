@@ -1,3 +1,3 @@
 module Egads
-  VERSION = '4.0.0.pre'
+  VERSION = '4.0.0'
 end
