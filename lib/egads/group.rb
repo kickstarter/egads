@@ -52,8 +52,12 @@ module Egads
 
     def symlink(src, dest)
       raise ArgumentError.new("#{src} is not a file") unless File.file?(src)
-      say_status :symlink, "from #{src} to #{dest}"
-      FileUtils.ln_sf(src, dest)
+      if File.file?(dest)
+        say_status :symlink, "Skipping #{src}, #{dest} already exists."
+      else
+        say_status :symlink, "from #{src} to #{dest}"
+        FileUtils.ln_s(src, dest)
+      end
     end
   end
 end
