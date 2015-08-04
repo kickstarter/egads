@@ -19,7 +19,6 @@ Gem::Specification.new do |s|
   s.rdoc_options      = ["--charset=UTF-8"]
 
   s.add_dependency "fog-aws", "~> 0.7"
-  s.add_dependency "unf" # Avoid fog warning about string encodings
   s.add_dependency "thor"
   s.add_development_dependency "rake"
   s.add_development_dependency "minitest"
