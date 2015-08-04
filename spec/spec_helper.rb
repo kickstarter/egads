@@ -5,6 +5,11 @@ require "minitest/autorun"
 require "minitest/pride"
 require "egads"
 
+begin
+  require 'pry'
+rescue LoadError
+end
+
 Fog.mock!
 
 SHA = 'deadbeef' * 5 # Test git sha
@@ -30,6 +35,5 @@ class Minitest::Spec
       ENV.delete('EGADS_CONFIG')
       ENV.delete('EGADS_REMOTE_CONFIG')
     end
-
   end
 end
