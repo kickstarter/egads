@@ -18,7 +18,7 @@ Gem::Specification.new do |s|
   s.extra_rdoc_files  = [ "README.md" ]
   s.rdoc_options      = ["--charset=UTF-8"]
 
-  s.add_dependency "fog", ">= 1.17.0" # New enough to avoid warnings w/ excon parameters
+  s.add_dependency "fog-aws", "~> 0.7"
   s.add_dependency "unf" # Avoid fog warning about string encodings
   s.add_dependency "thor"
   s.add_development_dependency "rake"
