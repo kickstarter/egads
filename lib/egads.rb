@@ -1,5 +1,5 @@
 require 'yaml'
-require 'fog/aws'
+require 'aws-sdk'
 require 'thor'
 require 'benchmark'
 require 'pathname'

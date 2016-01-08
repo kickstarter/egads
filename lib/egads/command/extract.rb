@@ -61,7 +61,7 @@ module Egads
         tarball = S3Tarball.new(sha, remote: true, seed: 'seed' == type)
         tmp_path = [path, 'tmp', rand(2**32)] * '.' # Use tmp path for atomicity
         duration = Benchmark.realtime do
-          File.open(tmp_path, 'w') {|f| f << tarball.contents }
+          File.open(tmp_path, 'w') {|f| tarball.download(f) }
         end
         File.rename(tmp_path, path)
         size = File.size(path)
