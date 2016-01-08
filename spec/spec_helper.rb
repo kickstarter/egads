@@ -10,7 +10,6 @@ begin
 rescue LoadError
 end
 
-Fog.mock! # TODO: remove me
 Aws.config[:stub_responses] = true
 
 SHA = 'deadbeef' * 5 # Test git sha
