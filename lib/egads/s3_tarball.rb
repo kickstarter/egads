@@ -20,7 +20,7 @@ module Egads
     end
 
     def exists?
-      bucket.files.head(key)
+      bucket.object(key).exists?
     end
 
     def local_tar_path
@@ -29,13 +29,13 @@ module Egads
 
     def upload(path=local_tar_path)
       File.open(path) {|f|
-        bucket.files.create(key: key, body: f)
+        bucket.put_object(key: key, body: f)
       }
     end
 
-    # Load the file contents from S3
-    def contents
-      bucket.files.get(key).body
+    # Write the S3 object's contents to a local file
+    def download(file)
+      bucket.object(key).get(response_target: file)
     end
 
     def bucket

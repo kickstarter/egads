@@ -7,8 +7,8 @@ module Egads
 
     def s3_bucket
       return @bucket if @bucket
-      fog = Fog::Storage::AWS.new(aws_access_key_id: config['s3']['access_key'], aws_secret_access_key: config['s3']['secret_key'])
-      @bucket ||= fog.directories.new(key: config['s3']['bucket'])
+      client = Aws::S3::Client.new(access_key_id: config['s3']['access_key'], secret_access_key: config['s3']['secret_key'], region: 'us-east-1')
+      @bucket ||= Aws::S3::Bucket.new(config['s3']['bucket'], client: client)
     end
 
     def s3_prefix

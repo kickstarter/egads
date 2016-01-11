@@ -10,7 +10,7 @@ begin
 rescue LoadError
 end
 
-Fog.mock!
+Aws.config[:stub_responses] = true
 
 SHA = 'deadbeef' * 5 # Test git sha
 
@@ -22,18 +22,16 @@ end
 
 # Extensions
 class Minitest::Spec
+  before do
+    ENV['EGADS_CONFIG'] = "example/egads.yml"
+    ENV['EGADS_REMOTE_CONFIG'] = "example/egads_remote.yml"
 
-  def self.setup_configs!
-    before do
-      ENV['EGADS_CONFIG'] = "example/egads.yml"
-      ENV['EGADS_REMOTE_CONFIG'] = "example/egads_remote.yml"
-      Egads::Config.s3_bucket.save # Ensure bucket exists
+    # Clear stubbed responses
+    Aws.config.delete(:s3)
+  end
 
-    end
-
-    after do
-      ENV.delete('EGADS_CONFIG')
-      ENV.delete('EGADS_REMOTE_CONFIG')
-    end
+  after do
+    ENV.delete('EGADS_CONFIG')
+    ENV.delete('EGADS_REMOTE_CONFIG')
   end
 end

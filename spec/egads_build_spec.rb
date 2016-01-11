@@ -1,7 +1,6 @@
 require_relative 'spec_helper'
 
 describe "Egads::Build" do
-  setup_configs!
   subject { Egads::Build }
 
   it 'should run the correct tasks' do

@@ -1,7 +1,6 @@
 require_relative 'spec_helper'
 
 describe "Egads::Check" do
-  setup_configs!
   subject { Egads::Check }
 
   it 'should run the correct tasks' do

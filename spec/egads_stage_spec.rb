@@ -1,7 +1,6 @@
 require_relative 'spec_helper'
 
 describe "Egads::Stage" do
-  setup_configs!
   subject { Egads::Stage }
 
   it 'should run the correct tasks' do

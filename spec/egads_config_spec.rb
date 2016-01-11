@@ -4,11 +4,11 @@ describe Egads::Config do
 
   subject { Egads::Config }
   it "raises ArgumentError for missing config" do
+    ENV['EGADS_CONFIG'] = '/no/such/path'
     -> { subject.config_path }.must_raise(ArgumentError)
   end
 
   describe "with an config file" do
-    setup_configs!
 
     let(:yml) { YAML.load_file("example/egads.yml") }
 
@@ -19,7 +19,7 @@ describe Egads::Config do
     end
 
     it "has an S3 bucket" do
-      subject.s3_bucket.key.must_equal yml['s3']['bucket']
+      subject.s3_bucket.name.must_equal yml['s3']['bucket']
     end
 
     it "has an S3 prefix" do
@@ -33,11 +33,11 @@ describe Egads::RemoteConfig do
   subject { Egads::RemoteConfig }
 
   it "raises ArgumentError for missing config" do
+    ENV['EGADS_REMOTE_CONFIG'] = '/no/such/path'
     -> { subject.config_path }.must_raise(ArgumentError)
   end
 
   describe "with an config file" do
-    setup_configs!
     let(:yml) { YAML.load_file("example/egads_remote.yml") }
 
     describe '#config' do
