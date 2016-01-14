@@ -33,5 +33,6 @@ class Minitest::Spec
   after do
     ENV.delete('EGADS_CONFIG')
     ENV.delete('EGADS_REMOTE_CONFIG')
+    Egads::Config.instance_variable_set(:@bucket, nil)
   end
 end
