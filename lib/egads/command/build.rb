@@ -3,9 +3,8 @@ module Egads
     include Thor::Actions
     include LocalHelpers
 
-    desc "[local] Compiles a deployable patch of the current commit and uploads it to S3"
+    desc "[local] Compiles a deployable tarball of the current commit and uploads it to S3"
     class_option :force, type: :boolean, aliases: '-f', default: false, banner: "Build and overwrite existing tarball on S3"
-    class_option :seed, type: :boolean, default: false, banner: "Builds and tags a complete tarball for more efficient patches"
     class_option 'no-upload', type: :boolean, default: false, banner: "Don't upload the tarball to S3"
     argument :rev, type: :string, default: 'HEAD', desc: 'git revision to build'
 
@@ -15,12 +14,12 @@ module Egads
       say_status :rev, "#{rev} parsed to #{sha}"
 
       unless should_build?
-        say_status :done, "#{build_type} tarball for #{sha} already exists. Pass --force to rebuild."
+        say_status :done, "tarball for #{sha} already exists. Pass --force to rebuild."
         exit 0
       end
 
       exit 1 unless can_build?
-      say_status :build, "Making #{build_type} tarball for #{sha}", :yellow
+      say_status :build, "Making tarball for #{sha}", :yellow
     end
 
     def run_before_build_hooks
@@ -45,21 +44,7 @@ module Egads
     end
 
     def make_tarball
-      if options[:seed]
-        # Seed tarball
-        run_with_code "git archive #{build_sha} --output #{tarball.local_tar_path}"
-      else
-        # Patch tarball
-        seed_ref = "refs/remotes/origin/#{Config.seed_branch}"
-        # NB: the seed tarball is named after the parent of seed tag
-        seed_parent = run_with_code("git rev-parse --verify #{seed_ref}^").strip
-        File.open('egads-seed', 'w') {|f| f << seed_parent + "\n" }
-        patch_files = [patch_path, 'egads-seed']
-        run_with_code "git diff --binary #{seed_ref} #{build_sha} > #{patch_path}"
-        run_with_code "tar -zcf #{tarball.local_tar_path} #{patch_files * ' '}"
-        patch_files.each {|f| File.delete(f) }
-      end
-
+      run_with_code "git archive #{build_sha} --output #{tarball.local_tar_path}"
     end
 
     def run_after_build_hooks
@@ -67,13 +52,7 @@ module Egads
     end
 
     def upload
-      invoke(Egads::Upload, [sha], force: options[:force], seed: options[:seed]) unless options['no-upload']
-    end
-
-    def push_seed
-      if options[:seed]
-        run_with_code "git push -f origin #{build_sha}:refs/heads/#{Config.seed_branch}"
-      end
+      invoke(Egads::Upload, [sha], force: options[:force]) unless options['no-upload']
     end
 
     module BuildHelpers
@@ -104,10 +83,6 @@ module Egads
 
       def patch_path
         "#{sha}.patch"
-      end
-
-      def build_type
-        options[:seed] ? 'seed' : 'patch'
       end
 
       def error(message)

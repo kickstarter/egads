@@ -19,14 +19,22 @@ module Egads
 
         do_extract patch_path
 
-        # Download seed
-        self.seed_sha = Pathname.new(patch_dir).join("egads-seed").read.strip
-        self.seed_path = File.join(RemoteConfig.seed_dir, "#{seed_sha}.tar.gz")
-        do_download(seed_sha, seed_path, 'seed')
+        # If the seed path exists, the patch was build w/ egads <= 4.0
+        # Newer patch files include the seed
+        seed_pointer = Pathname.new(patch_dir).join("egads-seed")
+        if seed_pointer.exist?
+          # Download seed
+          self.seed_sha = seed_pointer.read.strip
+          self.seed_path = File.join(RemoteConfig.seed_dir, "#{seed_sha}.tar.gz")
+          do_download(seed_sha, seed_path, 'seed')
 
-        do_extract seed_path
+          do_extract seed_path
 
-        apply_patch
+          apply_patch
+        else
+          say_status :done, 'Patch tarball is complete, no seed to extract.'
+        end
+
         finish_extraction
       else
         say_status :done, "#{sha} already extracted. Use --force to overwrite"
