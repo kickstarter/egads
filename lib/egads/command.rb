@@ -21,7 +21,7 @@ module Egads
     register(Extract, 'extract', 'extract SHA', '[remote, plumbing] Downloads tarball for SHA from S3 and extracts it to the filesystem')
     register(Stage, 'stage', 'stage SHA', '[remote, plumbing] Downloads tarball for SHA from S3 and extracts it to the filesystem')
     register(Release, 'release', 'release SHA', '[remote, plumbing] Downloads tarball for SHA from S3 and extracts it to the filesystem')
-    register(Trim, 'trime', 'trim [N]', "[remote, plumbing] Deletes old releases, keeping the N most recent (by mtime)")
+    register(Trim, 'trim', 'trim [N]', "[remote, plumbing] Deletes old releases, keeping the N most recent (by mtime)")
 
     map '--version' => :version
     desc :version, "Prints the version"
