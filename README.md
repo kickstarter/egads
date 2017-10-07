@@ -5,9 +5,9 @@ egads is a set of commands for deploying applications without depending on a git
 server.
 
 [![Build
-Status](https://travis-ci.org/kickstarter/egads.png)](https://travis-ci.org/kickstarter/egads)
+Status](https://travis-ci.org/kickstarter/egads.svg)](https://travis-ci.org/kickstarter/egads)
 [![Code
-Climate](https://d3s6mut3hikguw.cloudfront.net/github/kickstarter/egads.png)](https://codeclimate.com/github/kickstarter/egads)
+Climate](https://d3s6mut3hikguw.cloudfront.net/github/kickstarter/egads.svg)](https://codeclimate.com/github/kickstarter/egads)
 
 ## Install
 
