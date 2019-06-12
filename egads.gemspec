@@ -18,7 +18,7 @@ Gem::Specification.new do |s|
   s.extra_rdoc_files  = [ "README.md" ]
   s.rdoc_options      = ["--charset=UTF-8"]
 
-  s.add_dependency "aws-sdk", '~> 2.2', '>= 2.2.9'
+  s.add_dependency "aws-sdk-s3", '~> 1.0'
   s.add_dependency "thor"
   s.add_development_dependency "rake"
   s.add_development_dependency "minitest"
