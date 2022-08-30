@@ -4,6 +4,6 @@ describe "Egads::Trim" do
   subject { Egads::Trim }
 
   it 'should run the correct tasks' do
-  subject.commands.keys.must_equal %w(trim)
+  _(subject.commands.keys).must_equal %w(trim)
   end
 end
