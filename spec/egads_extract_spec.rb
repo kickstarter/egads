@@ -4,6 +4,6 @@ describe "Egads::Extract" do
   subject { Egads::Extract }
 
   it 'should run the correct tasks' do
-  subject.commands.keys.must_equal %w(setup_environment extract)
+  _(subject.commands.keys).must_equal %w(setup_environment extract)
   end
 end

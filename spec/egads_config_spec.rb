@@ -5,7 +5,7 @@ describe Egads::Config do
   subject { Egads::Config }
   it "raises ArgumentError for missing config" do
     ENV['EGADS_CONFIG'] = '/no/such/path'
-    -> { subject.config_path }.must_raise(ArgumentError)
+    _{ subject.config_path }.must_raise(ArgumentError)
   end
 
   describe "with an config file" do
@@ -14,16 +14,16 @@ describe Egads::Config do
 
     describe '#config' do
       it 'is a hash' do
-        subject.config.must_equal yml
+        _(subject.config).must_equal yml
       end
     end
 
     it "has an S3 bucket" do
-      subject.s3_bucket.name.must_equal yml['s3']['bucket']
+      _(subject.s3_bucket.name).must_equal yml['s3']['bucket']
     end
 
     it "has an S3 prefix" do
-      subject.s3_prefix.must_equal yml['s3']['prefix']
+      _(subject.s3_prefix).must_equal yml['s3']['prefix']
     end
   end
 
@@ -34,21 +34,21 @@ describe Egads::RemoteConfig do
 
   it "raises ArgumentError for missing config" do
     ENV['EGADS_REMOTE_CONFIG'] = '/no/such/path'
-    -> { subject.config_path }.must_raise(ArgumentError)
+    _{ subject.config_path }.must_raise(ArgumentError)
   end
 
   describe "with an config file" do
     let(:yml) { YAML.load_file("example/egads_remote.yml") }
 
     describe '#config' do
-      it('is a hash') { subject.config.must_equal yml }
+      it('is a hash') { _(subject.config).must_equal yml }
     end
 
-    it('#release_to') { subject.release_to.must_equal yml['release_to'] }
-    it('#extract_to') { subject.extract_to.must_equal yml['extract_to'] }
-    it('#release_dir') { subject.release_dir('abc').must_equal File.join(yml['extract_to'], 'abc') }
-    it('#restart_command') { subject.restart_command.must_equal yml['restart_command'] }
-    it('#bundler_options') { subject.bundler_options.must_equal yml['bundler']['options'] }
+    it('#release_to') { _(subject.release_to).must_equal yml['release_to'] }
+    it('#extract_to') { _(subject.extract_to).must_equal yml['extract_to'] }
+    it('#release_dir') { _(subject.release_dir('abc')).must_equal File.join(yml['extract_to'], 'abc') }
+    it('#restart_command') { _(subject.restart_command).must_equal yml['restart_command'] }
+    it('#bundler_options') { _(subject.bundler_options).must_equal yml['bundler']['options'] }
 
     describe '#setup_environment' do
       before { subject.setup_environment }
@@ -59,7 +59,7 @@ describe Egads::RemoteConfig do
 
       it 'should set ENV values' do
         yml['env'].each do |key, value|
-          ENV[key].must_equal value
+          _(ENV[key]).must_equal value
         end
       end
     end
