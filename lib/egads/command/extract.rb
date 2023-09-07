@@ -104,7 +104,7 @@ module Egads
     end
 
     def should_download?(path)
-      options[:force] || File.zero?(path) || !File.exists?(path)
+      options[:force] || File.zero?(path) || !File.exist?(path)
     end
 
     def should_extract?

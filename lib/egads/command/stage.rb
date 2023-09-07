@@ -66,7 +66,7 @@ module Egads
     end
 
     def should_stage?
-      options[:force] || !File.exists?(stage_flag_path)
+      options[:force] || !File.exist?(stage_flag_path)
     end
 
     def shared_path
@@ -74,5 +74,3 @@ module Egads
     end
   end
 end
-
-
