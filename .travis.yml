@@ -1,5 +1,0 @@
-language: ruby
-sudo: false # Opt-in to container infrastructure
-rvm:
-  - 2.5.5
-  - 2.6.3
