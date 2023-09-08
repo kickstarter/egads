@@ -37,8 +37,8 @@ Commands are either *porcelain* commands that you should call directly as part o
 
 ### Local commands
 
-* `egads check [SHA]` - checks if a deployable tarball of the current commit exists on S3.
-* `egads build [SHA]` - makes a deployable tarball of the current commit and upload it to S3 (if missing).
+* `egads check SHA` - checks if a deployable tarball of the current commit exists on S3.
+* `egads build SHA` - makes a deployable tarball of the current commit and upload it to S3 (if missing).
 * `egads upload SHA` - (plumbing, called by `build`) Uploads a pre-built tarball.
 
 ### Remote commands
