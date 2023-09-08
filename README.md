@@ -1,6 +1,8 @@
 # egads!!!
 # *Extensible Git-Archive Deploy Strategy*
 
+[![Test and Release](https://github.com/kickstarter/egads/actions/workflows/test-release.yml/badge.svg)](https://github.com/kickstarter/egads/actions/workflows/test-release.yml)
+
 egads is a set of commands for deploying applications without depending on a git
 server.
 
@@ -13,13 +15,17 @@ Climate](https://d3s6mut3hikguw.cloudfront.net/github/kickstarter/egads.svg)](ht
 
 Put `egads` in your Gemfile:
 
-    # In Gemfile
-    gem 'egads', require: nil
+```ruby
+# ./Gemfile
+gem 'egads', require: nil
+```
 
 On remote machines (to which you deploy), `egads` must be in your PATH.
 So install `egads` as a system gem:
 
-    sudo gem install egads
+```bash
+gem install egads
+```
 
 ## Commands
 
@@ -56,6 +62,15 @@ The deploy process is:
 * Run `egads build` from a server with a full git checkout (e.g. your local machine). This ensures there's a tarball for the remote servers to download.
 * Run `egads stage SHA` on all the remote servers to download, extract, and configure the SHA for release.
 * Run `egads release SHA` on all the remote servers to symlink the staged SHA to 'current', and restart services.
+
+## Publishing a New Gem Version
+
+To publish a new version of `egads`:
+
+1. Update [`Egads::VERSION`](./lib/egads/version.rb)
+2. Commit and push to GitHub
+3. Create a new [GitHub release](https://github.com/kickstarter/egads/releases)
+4. Monitor the [Test and Release](https://github.com/kickstarter/egads/actions/workflows/test-release.yml) action to ensure the gem is published successfully
 
 ## License
 
