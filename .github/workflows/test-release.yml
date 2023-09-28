@@ -2,6 +2,15 @@ name: Test and Release
 on:
   pull_request:
   push:
+    paths:
+      - .github/**
+      - bin/**
+      - lib/**
+      - spec/**
+      - Gemfile
+      - Guardfile
+      - Rakefile
+      - egads.gemspec
   release:
     types:
       - published
@@ -33,8 +42,8 @@ jobs:
       - uses: ruby/setup-ruby@v1
         with:
           ruby-version: "3.2"
-      - uses: ./.github/actions/setup-rubygems
+      - uses: kickstarter/actions/setup-rubygems
         with:
-          rubygems_api_key: ${{ secrets.RUBYGEMS_API_KEY }}
+          api-key: ${{ secrets.RUBYGEMS_API_KEY }}
       - run: bundle install
       - run: bundle exec rake gem:push
