@@ -1,10 +1,18 @@
+# rubocop:disable Style/Documentation, Style/RaiseArgs, Style/RescueModifier
+# frozen_string_literal: true
+
+require 'aws-sdk-codedeploy'
+
 module Egads
   class Release < Group
+    include Egads::LocalHelpers
     include Thor::Actions
 
-    desc "[remote] Symlinks SHA to current and restarts services. If needed, stages SHA"
-    class_option :force, type: :boolean, default: false, banner: "Overwrite existing release"
+    desc '[remote] Symlinks SHA to current and restarts services. If needed, stages SHA'
+    class_option :force, type: :boolean, default: false, banner: 'Overwrite existing release'
+    class_option :deployment_id, type: :boolean, default: false, banner: 'Use the CodeDeploy deployment ID in the release directory'
     argument :sha, type: :string, required: true, desc: 'git SHA to stage'
+
     def setup_environment
       RemoteConfig.setup_environment
     end
@@ -15,11 +23,13 @@ module Egads
 
     def run_before_release_hooks
       return unless should_release?
+
       inside(dir) { run_hooks_for(:release, :before) }
     end
 
     def symlink_release
       return unless should_release?
+
       atomic_symlink(dir, release_to)
     end
 
@@ -44,6 +54,7 @@ module Egads
     end
 
     protected
+
     def dir
       RemoteConfig.release_dir(sha)
     end
@@ -66,6 +77,7 @@ module Egads
     # Use an extra temporary symlink for atomicity (equivalent to `mv -T`)
     def atomic_symlink(src, dest)
       raise ArgumentError.new("#{src} is not a directory") unless File.directory?(src)
+
       say_status :symlink, "from #{src} to #{dest}"
       tmp = "#{dest}-new-#{rand(2**32)}"
       # Make a temporary symlink
@@ -75,3 +87,5 @@ module Egads
     end
   end
 end
+
+# rubocop:enable Style/Documentation, Style/RaiseArgs, Style/RescueModifier
