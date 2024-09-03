@@ -6,4 +6,5 @@ group :development do
   gem 'guard'
   gem 'guard-minitest'
   gem 'aws-sdk-codedeploy'
+  gem 'rspec'
 end
