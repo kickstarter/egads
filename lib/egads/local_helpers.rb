@@ -19,7 +19,7 @@ module Egads
       @tarball ||= S3Tarball.new(sha, seed: options[:seed])
     end
 
-    def deployment-id
+    def deployment_id
       environment = ENV['EC2_ENVIRONMENT'] || ''
       application = ENV['EC2_SERVICE'] || ''
 

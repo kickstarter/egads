@@ -10,7 +10,7 @@ module Egads
 
     desc '[remote] Symlinks SHA to current and restarts services. If needed, stages SHA'
     class_option :force, type: :boolean, default: false, banner: 'Overwrite existing release'
-    class_option :deployment-id, type: :boolean, default: false, banner: 'Include deployment ID in release directory'
+    class_option :deployment_id, type: :boolean, default: false, banner: 'Include deployment ID in release directory'
     argument :sha, type: :string, required: true, desc: 'git SHA to stage'
 
     def setup_environment
