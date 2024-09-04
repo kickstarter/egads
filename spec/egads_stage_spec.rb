@@ -12,7 +12,7 @@ describe 'Egads::Stage' do
   it 'should have the correct class options' do
     expected_options = {
       force: { type: :boolean, default: false, banner: 'Overwrite existing files' },
-      deployment_id: { type: :boolean, default: false, banner: 'Include deployment ID in release directory'}
+      deployment-id: { type: :boolean, default: false, banner: 'Include deployment ID in release directory'}
     }
 
     actual_options = subject.class_options.transform_values { |opt| { type: opt.type, default: opt.default, banner: opt.banner }}

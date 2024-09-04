@@ -10,7 +10,7 @@ module Egads
 
     desc '[remote] Readies SHA for release. If needed, generates URL for SHA and extracts'
     class_option :force, type: :boolean, default: false, banner: 'Overwrite existing files'
-    class_option :deployment_id, type: :boolean, default: false, banner: 'Include deployment ID in release directory'
+    class_option :deployment-id, type: :boolean, default: false, banner: 'Include deployment ID in release directory'
     argument :sha, type: :string, required: true, desc: 'git SHA to stage'
 
     def setup_environment
@@ -69,9 +69,9 @@ module Egads
 
     def dir
       base_dir = RemoteConfig.release_dir(sha)
-      deployment_id_value = deployment_id if options[:deployment_id]
+      deployment-id_value = deployment-id if options[:deployment-id]
 
-      deployment_id_value ? "#{base_dir}_#{deployment_id_value}" : base_dir
+      deployment-id_value ? "#{base_dir}_#{deployment-id_value}" : base_dir
     end
 
     def stage_flag_path
