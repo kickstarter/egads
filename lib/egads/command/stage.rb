@@ -69,9 +69,11 @@ module Egads
 
     def dir
       base_dir = RemoteConfig.release_dir(sha)
-      deployment_id_value = deployment_id if options[:deployment_id]
-
-      deployment_id_value ? "#{base_dir}_#{deployment_id_value}" : base_dir
+      if options[:deployment_id]
+        deployment_id_value = deployment_id
+        return "#{base_dir}_#{deployment_id_value}" if deployment_id_value
+      end
+      base_dir
     end
 
     def stage_flag_path

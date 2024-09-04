@@ -89,7 +89,12 @@ module Egads
 
     # Directory created upon successful extraction
     def release_dir
-      RemoteConfig.release_dir(sha)
+      base_dir = RemoteConfig.release_dir(sha)
+      if options[:deployment_id]
+        deployment_id_value = deployment_id
+        return "#{base_dir}_#{deployment_id_value}" if deployment_id_value
+      end
+      base_dir
     end
 
     # Directory where in-progress extraction occurs
