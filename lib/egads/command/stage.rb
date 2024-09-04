@@ -10,7 +10,7 @@ module Egads
 
     desc '[remote] Readies SHA for release. If needed, generates URL for SHA and extracts'
     class_option :force, type: :boolean, default: false, banner: 'Overwrite existing files'
-    class_option :deployment_id, type: :string, default: false, banner: 'Include deployment ID in release directory'
+    class_option :deployment_id, type: :boolean, default: false, banner: 'Include deployment ID in release directory'
     argument :sha, type: :string, required: true, desc: 'git SHA to stage'
 
     def setup_environment
