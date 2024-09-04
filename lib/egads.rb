@@ -1,5 +1,6 @@
 require 'fileutils'
 require 'yaml'
+require 'aws-sdk-codedeploy'
 require 'aws-sdk-s3'
 require 'thor'
 require 'benchmark'

@@ -18,6 +18,7 @@ Gem::Specification.new do |s|
   s.extra_rdoc_files  = ["README.md"]
   s.rdoc_options      = ["--charset=UTF-8"]
 
+  s.add_dependency "aws-sdk-codedeploy", '~> 1.0'
   s.add_dependency "aws-sdk-s3", '~> 1.0'
   s.add_dependency "rexml", ">= 3.3.4" # required for Ruby 3+
   s.add_dependency "thor"
