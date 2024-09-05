@@ -4,6 +4,7 @@ module Egads
 
     desc "[remote, plumbing] Downloads tarball for SHA from S3 and extracts it to the filesystem"
     class_option :force, type: :boolean, aliases: '-f', default: false, banner: "Overwrite existing files"
+    class_option :deployment_id, type: :string, default: nil, banner: 'Append suffix to release directory'
     argument :sha, type: :string, required: true, desc: 'git SHA to download and extract'
 
     attr_accessor :seed_sha, :seed_path
@@ -89,11 +90,8 @@ module Egads
 
     # Directory created upon successful extraction
     def release_dir
-      base_dir = RemoteConfig.release_dir(sha)
-      if options[:deployment_id]
-        return "#{base_dir}_TEST"
-      end
-      base_dir
+      suffix = options[:deployment_id] ? "_#{options[:deployment_id]}" : ''
+      dir(sha) + suffix
     end
 
     # Directory where in-progress extraction occurs
