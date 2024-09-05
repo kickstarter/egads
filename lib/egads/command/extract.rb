@@ -91,8 +91,7 @@ module Egads
     def release_dir
       base_dir = RemoteConfig.release_dir(sha)
       if options[:deployment_id]
-        deployment_id_value = deployment_id
-        return "#{base_dir}_#{deployment_id_value}" if deployment_id_value
+        return "#{base_dir}_TEST"
       end
       base_dir
     end
