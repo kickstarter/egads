@@ -13,6 +13,6 @@ runs:
         mkdir -p ~/.gem
         cat <<-YAML > ~/.gem/credentials
         ---
-        :rubygems_api_key: ${{ inputs.rubygems_api_key }}
+        :rubygems_api_key: ${{ inputs.api-key }}
         YAML
         chmod 0600 ~/.gem/credentials
