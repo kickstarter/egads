@@ -3,6 +3,7 @@ module Egads
     include Thor::Actions
 
     desc "[remote, plumbing] Downloads tarball for SHA from S3 and extracts it to the filesystem"
+    class_option :deployment_id, type: :string, default: nil, banner: 'Append suffix to release directory'
     class_option :force, type: :boolean, aliases: '-f', default: false, banner: "Overwrite existing files"
     argument :sha, type: :string, required: true, desc: 'git SHA to download and extract'
 
@@ -89,7 +90,8 @@ module Egads
 
     # Directory created upon successful extraction
     def release_dir
-      RemoteConfig.release_dir(sha)
+      suffix = options[:deployment_id] ? "_#{options[:deployment_id]}" : ''
+      RemoteConfig.release_dir(sha) + suffix
     end
 
     # Directory where in-progress extraction occurs

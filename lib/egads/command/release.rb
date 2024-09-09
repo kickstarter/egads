@@ -3,6 +3,7 @@ module Egads
     include Thor::Actions
 
     desc "[remote] Symlinks SHA to current and restarts services. If needed, stages SHA"
+    class_option :deployment_id, type: :string, default: nil, banner: 'Append suffix to release directory'
     class_option :force, type: :boolean, default: false, banner: "Overwrite existing release"
     argument :sha, type: :string, required: true, desc: 'git SHA to stage'
     def setup_environment
@@ -44,8 +45,10 @@ module Egads
     end
 
     protected
+    
     def dir
-      RemoteConfig.release_dir(sha)
+      suffix = options[:deployment_id] ? "_#{options[:deployment_id]}" : ''
+      RemoteConfig.release_dir(sha) + suffix
     end
 
     def release_to
